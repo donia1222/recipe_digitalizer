@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import {
   ChefHat,
   Users,
@@ -17,7 +17,9 @@ import {
   Eye,
   Zap,
   BookOpen,
-  Camera
+  Camera,
+  Menu,
+  X
 } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -26,6 +28,15 @@ interface LandingPageProps {
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const navItems = [
+    { label: "Funktionen", href: "#funktionen" },
+    { label: "So funktioniert es", href: "#workflow" },
+    { label: "KI-Technologie", href: "#ki" },
+    { label: "Rollen", href: "#rollen" },
+  ]
+
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
@@ -124,6 +135,99 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
   return (
     <div className="min-h-screen bg-blue-50 overflow-x-hidden" style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
 
+      {/* ===== HEADER ===== */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-gray-100/80">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
+              <ChefHat className="h-5 w-5 text-white" />
+            </div>
+            <div className="leading-none">
+              <span className="text-lg font-extrabold text-gray-900 tracking-tight">Rezept</span>
+              <span className="text-lg font-extrabold text-blue-600 tracking-tight">App</span>
+            </div>
+          </div>
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="px-4 py-2 text-[15px] font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
+            <button
+              onClick={onAccessApp}
+              className="ml-3 h-10 px-5 rounded-full bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Zur Anwendung
+            </button>
+          </nav>
+
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="md:hidden w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center hover:bg-blue-700 transition-colors"
+          >
+            <Menu className="h-5 w-5 text-white" />
+          </button>
+        </div>
+      </header>
+
+      {/* ===== MOBILE MENU MODAL ===== */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[60]">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setMenuOpen(false)}
+          />
+          {/* Panel */}
+          <div className="absolute top-0 right-0 w-[280px] h-full bg-white shadow-2xl flex flex-col">
+            {/* Close */}
+            <div className="flex items-center justify-between px-6 h-16 border-b border-gray-100">
+              <span className="text-lg font-bold text-gray-900">Menu</span>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
+            {/* Nav Links */}
+            <nav className="flex-1 px-4 py-6 space-y-1">
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-4 py-3 text-[15px] font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            {/* CTA */}
+            <div className="px-6 pb-8">
+              <button
+                onClick={() => {
+                  setMenuOpen(false)
+                  onAccessApp()
+                }}
+                className="w-full h-12 rounded-xl bg-blue-600 text-white font-semibold text-[15px] shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <Utensils className="h-4 w-4" />
+                Zur Anwendung
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ===== HERO SECTION ===== */}
       <section className="relative overflow-hidden">
         {/* Background */}
@@ -132,7 +236,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/30 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
         <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-indigo-100/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
 
-        <div className="relative max-w-7xl mx-auto px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
+        <div className="relative max-w-7xl mx-auto px-6 pt-12 pb-20 sm:pt-20 sm:pb-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left content */}
             <div className="max-w-xl">
@@ -221,7 +325,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
       </section>
 
       {/* ===== FEATURES GRID ===== */}
-      <section className="py-24 bg-gray-50/80">
+      <section id="funktionen" className="py-24 bg-gray-50/80 scroll-mt-16">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -267,7 +371,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
       </section>
 
       {/* ===== HOW IT WORKS ===== */}
-      <section className="py-24 bg-white">
+      <section id="workflow" className="py-24 bg-white scroll-mt-16">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -309,7 +413,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
       </section>
 
       {/* ===== AI SECTION (Dark) ===== */}
-      <section className="py-24 bg-gray-900 text-white">
+      <section id="ki" className="py-24 bg-gray-900 text-white scroll-mt-16">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -372,7 +476,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
       </section>
 
       {/* ===== ROLES SECTION ===== */}
-      <section className="py-24 bg-white">
+      <section id="rollen" className="py-24 bg-white scroll-mt-16">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
