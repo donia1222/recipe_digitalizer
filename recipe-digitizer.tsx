@@ -569,34 +569,35 @@ export default function RecipeDigitizer({ handleLogout, userRole, onBackToLandin
           }}
         />
       ) : currentView === 'manual-recipes' ? (
-        <div className="min-h-screen bg-gray-50">
-          <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-            <div className="container mx-auto px-4 sm:px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Button
-                    onClick={goBack}
-                    variant="outline"
-                    size="sm"
-                    className="border-gray-300 hover:bg-gray-50 bg-transparent"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                  </Button>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
-                      <ChefHat className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-lg font-semibold text-gray-900">Manuelle Rezepte</h1>
-                      <p className="text-sm text-gray-600">Rezept erstellen</p>
-                    </div>
-                  </div>
+        <div className="min-h-screen bg-blue-50 overflow-x-hidden">
+          {/* Decorative background blobs */}
+          <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+          </div>
+
+          {/* Header */}
+          <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+            <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={goBack}
+                  className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+                >
+                  <ArrowLeft className="h-5 w-5 text-blue-600" />
+                </button>
+                <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+                <div className="leading-none">
+                  <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
+                  <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
                 </div>
               </div>
             </div>
+            {/* Gradient fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
           </div>
-          <div className="pt-24 pb-12">
-            <div className="container mx-auto px-4 sm:px-6">
+          <div className="relative pt-24 pb-12">
+            <div className="max-w-4xl mx-auto px-6">
               <ManualRecipeCreator
                 onRecipeCreated={() => {
                   // Optional: navigate back to home or show success message
@@ -687,37 +688,36 @@ export default function RecipeDigitizer({ handleLogout, userRole, onBackToLandin
         />
       ) : (
         // Vista de receta guardada - solo análisis con imágenes
-        <div>
-          {/* Header principal */}
-          <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-            <div className="container mx-auto px-4 sm:px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Button
-                    onClick={goBack}
-                    variant="outline"
-                    size="sm"
-                    className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-50 bg-transparent"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                  </Button>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                      <ChefHat className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-lg font-semibold text-gray-900">Rezepte Digitalisieren</h1>
-                      <p className="text-sm text-gray-600">Rezept analysieren und bearbeiten</p>
-                    </div>
-                  </div>
+        <div className="min-h-screen bg-blue-50 overflow-x-hidden">
+          {/* Decorative background blobs */}
+          <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+          </div>
+
+          {/* Header */}
+          <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+            <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={goBack}
+                  className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+                >
+                  <ArrowLeft className="h-5 w-5 text-blue-600" />
+                </button>
+                <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+                <div className="leading-none">
+                  <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
+                  <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
                 </div>
               </div>
             </div>
+            {/* Gradient fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
           </div>
-      
 
           {/* Recipe Analysis */}
-          <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 pt-24">
+          <div className="relative max-w-4xl mx-auto px-6 pt-24 pb-12">
             {analysis && (
               <RecipeAnalyzer
                 recipe={analysis}

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from "react"
+import Link from "next/link"
 import {
   ChefHat,
   Users,
@@ -36,7 +37,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [legalModal, setLegalModal] = useState<"datenschutz" | "agb" | "impressum" | null>(null)
 
   const toggleFaq = useCallback((index: number) => {
     setOpenFaq(prev => prev === index ? null : index)
@@ -1050,26 +1050,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
 
             {/* Legal links */}
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-6">
-              <button
-                onClick={() => setLegalModal("datenschutz")}
+              <Link
+                href="/datenschutz"
                 className="text-sm text-gray-500 hover:text-blue-400 transition-colors"
               >
                 Datenschutz
-              </button>
+              </Link>
               <span className="text-gray-700 hidden sm:inline">·</span>
-              <button
-                onClick={() => setLegalModal("agb")}
+              <Link
+                href="/agb"
                 className="text-sm text-gray-500 hover:text-blue-400 transition-colors"
               >
                 AGB
-              </button>
+              </Link>
               <span className="text-gray-700 hidden sm:inline">·</span>
-              <button
-                onClick={() => setLegalModal("impressum")}
+              <Link
+                href="/impressum"
                 className="text-sm text-gray-500 hover:text-blue-400 transition-colors"
               >
                 Impressum
-              </button>
+              </Link>
               <span className="text-gray-700 hidden sm:inline">·</span>
               <a
                 href="https://www.lweb.ch"
@@ -1096,162 +1096,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
         </div>
       </footer>
 
-      {/* ===== LEGAL MODALS ===== */}
-      {legalModal && (
-        <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center sm:p-6">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            onClick={() => setLegalModal(null)}
-          />
-          {/* Modal */}
-          <div className="relative bg-white rounded-t-[20px] sm:rounded-[20px] shadow-2xl w-full max-w-lg max-h-[70vh] flex flex-col overflow-hidden">
-            {/* Header - sticky */}
-            <div className="sticky top-0 z-10 bg-white flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-bold text-gray-900">
-                {legalModal === "datenschutz" && "Datenschutzerklärung"}
-                {legalModal === "agb" && "Allgemeine Geschäftsbedingungen"}
-                {legalModal === "impressum" && "Impressum"}
-              </h3>
-              <button
-                onClick={() => setLegalModal(null)}
-                className="w-9 h-9 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors flex-shrink-0"
-              >
-                <X className="h-5 w-5 text-gray-700" />
-              </button>
-            </div>
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto px-6 py-5 text-[14px] text-gray-600 leading-relaxed space-y-4">
-
-              {/* ── Datenschutz ── */}
-              {legalModal === "datenschutz" && (
-                <>
-                  <p className="text-sm text-gray-400">Gültig ab: Januar 2025</p>
-
-                  <h4 className="text-base font-bold text-gray-900">1. Verantwortliche Stelle</h4>
-                  <p>Lweb Schweiz, Roberto Mendez, Schweiz. Kontakt: info@lweb.ch</p>
-
-                  <h4 className="text-base font-bold text-gray-900">2. Erhobene Daten</h4>
-                  <p>Bei der Nutzung von Recipe Digitizer werden folgende Daten verarbeitet:</p>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Benutzername und gewählte Rolle (Administrator, Mitarbeiter, Gast)</li>
-                    <li>Hochgeladene Rezeptbilder zur KI-Analyse</li>
-                    <li>Erstellte Rezepte, Kommentare und Bewertungen</li>
-                    <li>Technische Daten (Browser-Typ, Geräteinformationen) für die PWA-Funktionalität</li>
-                  </ul>
-
-                  <h4 className="text-base font-bold text-gray-900">3. Zweck der Datenverarbeitung</h4>
-                  <p>Die Daten werden ausschliesslich für folgende Zwecke verwendet:</p>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Bereitstellung und Verbesserung der Rezeptverwaltung</li>
-                    <li>KI-gestützte Digitalisierung von Rezepten</li>
-                    <li>Verwaltung von Benutzerkonten und Berechtigungen</li>
-                    <li>Ermöglichung des Kommentar- und Bewertungssystems</li>
-                  </ul>
-
-                  <h4 className="text-base font-bold text-gray-900">4. Datenspeicherung</h4>
-                  <p>Rezeptdaten werden in einer geschützten MySQL-Datenbank auf Schweizer Servern (Hostpoint) gespeichert. Lokale Daten werden im Browser-Cache (localStorage) abgelegt und können vom Benutzer jederzeit gelöscht werden.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">5. Drittanbieter-Dienste</h4>
-                  <p>Für die KI-Analyse von Rezeptbildern wird der Dienst FoodScan AI verwendet. Dabei werden ausschliesslich die hochgeladenen Bilder zur Verarbeitung übermittelt. Es werden keine personenbezogenen Daten an Dritte weitergegeben.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">6. Cookies & localStorage</h4>
-                  <p>Die Anwendung verwendet localStorage zur Speicherung von Sitzungsdaten und Benutzereinstellungen. Es werden keine Tracking-Cookies oder Analyse-Tools von Drittanbietern eingesetzt.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">7. Ihre Rechte</h4>
-                  <p>Gemäss dem Schweizer Datenschutzgesetz (DSG) haben Sie das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten. Kontaktieren Sie uns unter info@lweb.ch.</p>
-                </>
-              )}
-
-              {/* ── AGB ── */}
-              {legalModal === "agb" && (
-                <>
-                  <p className="text-sm text-gray-400">Gültig ab: Januar 2025</p>
-
-                  <h4 className="text-base font-bold text-gray-900">1. Geltungsbereich</h4>
-                  <p>Diese Allgemeinen Geschäftsbedingungen gelten für die Nutzung der Software «Recipe Digitizer», entwickelt und bereitgestellt von Lweb Schweiz.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">2. Leistungsbeschreibung</h4>
-                  <p>Recipe Digitizer ist eine webbasierte Anwendung (PWA) zur Digitalisierung, Verwaltung und Organisation von Rezepten mittels künstlicher Intelligenz. Die Software umfasst:</p>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>KI-gestützte Rezeptdigitalisierung aus Bildern</li>
-                    <li>Rezeptverwaltung mit Bibliothek und Suchfunktion</li>
-                    <li>Rollenbasiertes Benutzersystem (Administrator, Mitarbeiter, Gast)</li>
-                    <li>Kommentar- und Bewertungssystem</li>
-                    <li>Intelligenter Portionsrechner</li>
-                    <li>Offline-Funktionalität als PWA</li>
-                  </ul>
-
-                  <h4 className="text-base font-bold text-gray-900">3. Nutzungsrechte</h4>
-                  <p>Der Kunde erhält ein nicht-exklusives, nicht übertragbares Nutzungsrecht an der Software für den vereinbarten Einsatzzweck. Die Software darf nicht ohne schriftliche Genehmigung weiterverkauft, kopiert oder verändert werden.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">4. Verfügbarkeit</h4>
-                  <p>Lweb Schweiz bemüht sich um eine hohe Verfügbarkeit der Anwendung. Eine Garantie von 100% Verfügbarkeit kann nicht gewährleistet werden. Wartungsarbeiten werden nach Möglichkeit im Voraus angekündigt.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">5. Haftung</h4>
-                  <p>Lweb Schweiz haftet nicht für Datenverluste durch unsachgemässe Nutzung, höhere Gewalt oder Ausfälle von Drittanbietern (z.B. KI-Dienste). Die Haftung beschränkt sich auf den Vertragswert der Software.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">6. Zahlungsbedingungen</h4>
-                  <p>Die Zahlungsbedingungen werden im individuellen Angebot festgelegt. Standardmässig gelten 30 Tage Zahlungsfrist ab Rechnungsstellung. Alle Preise verstehen sich in CHF und exklusive MwSt.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">7. Kündigung</h4>
-                  <p>Der Vertrag kann von beiden Seiten mit einer Frist von 30 Tagen schriftlich gekündigt werden. Bei Kündigung werden alle Kundendaten auf Wunsch exportiert und anschliessend gelöscht.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">8. Anwendbares Recht</h4>
-                  <p>Es gilt Schweizer Recht. Gerichtsstand ist der Sitz von Lweb Schweiz.</p>
-                </>
-              )}
-
-              {/* ── Impressum ── */}
-              {legalModal === "impressum" && (
-                <>
-                  <h4 className="text-base font-bold text-gray-900">Angaben gemäss Schweizer Recht</h4>
-
-                  <div className="bg-gray-50 rounded-xl p-5 space-y-2">
-                    <p><span className="font-semibold text-gray-800">Firma:</span> Lweb Schweiz</p>
-                    <p><span className="font-semibold text-gray-800">Inhaber:</span> Roberto Mendez</p>
-                    <p><span className="font-semibold text-gray-800">Land:</span> Schweiz</p>
-                    <p><span className="font-semibold text-gray-800">E-Mail:</span> info@lweb.ch</p>
-                    <p><span className="font-semibold text-gray-800">Webseite:</span>{" "}
-                      <a href="https://www.lweb.ch" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500 transition-colors">
-                        www.lweb.ch
-                      </a>
-                    </p>
-                  </div>
-
-                  <h4 className="text-base font-bold text-gray-900">Haftungsausschluss</h4>
-                  <p>Der Autor übernimmt keinerlei Gewähr hinsichtlich der inhaltlichen Richtigkeit, Genauigkeit, Aktualität, Zuverlässigkeit und Vollständigkeit der Informationen. Haftungsansprüche gegen den Autor wegen Schäden materieller oder immaterieller Art, welche aus dem Zugriff oder der Nutzung bzw. Nichtnutzung der veröffentlichten Informationen entstanden sind, werden ausgeschlossen.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">Urheberrechte</h4>
-                  <p>Die Urheber- und alle anderen Rechte an Inhalten, Bildern, Fotos oder anderen Dateien auf dieser Anwendung gehören ausschliesslich Lweb Schweiz oder den speziell genannten Rechtsinhabern. Für die Reproduktion jeglicher Elemente ist die schriftliche Zustimmung der Urheberrechtsträger im Voraus einzuholen.</p>
-
-                  <h4 className="text-base font-bold text-gray-900">Kontakt</h4>
-                  <p>Bei Fragen oder Anliegen erreichen Sie uns unter:</p>
-                  <div className="bg-gray-50 rounded-xl p-5 space-y-2">
-                    <p><span className="font-semibold text-gray-800">E-Mail:</span> info@lweb.ch</p>
-                    <p><span className="font-semibold text-gray-800">WhatsApp:</span> +41 76 560 86 45</p>
-                    <p><span className="font-semibold text-gray-800">Web:</span>{" "}
-                      <a href="https://www.lweb.ch" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500 transition-colors">
-                        www.lweb.ch
-                      </a>
-                    </p>
-                  </div>
-                </>
-              )}
-
-            </div>
-            {/* Footer - sticky */}
-            <div className="sticky bottom-0 bg-white px-6 py-3 border-t border-gray-100 flex justify-end">
-              <button
-                onClick={() => setLegalModal(null)}
-                className="h-10 px-6 rounded-xl bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
-              >
-                Schliessen
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

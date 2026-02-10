@@ -168,25 +168,21 @@ export default function AdminDashboard() {
     color: string
     onClick?: () => void
   }) => (
-    <Card
-      className={`bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 ${onClick ? "cursor-pointer hover:border-gray-300" : ""}`}
+    <div
+      className={`bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] ${onClick ? "cursor-pointer" : ""} group`}
       onClick={onClick}
     >
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${color}`}>
-            <Icon className="h-6 w-6 text-white" />
-          </div>
-          <Badge variant="secondary" className="bg-gray-100 text-gray-700 border-gray-200">
-            {value}
-          </Badge>
+      <div className="flex items-center justify-between mb-5">
+        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${color} group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]`}>
+          <Icon className="h-6 w-6 text-white" />
         </div>
-      </CardHeader>
-      <CardContent>
-        <CardTitle className="text-gray-900 text-lg mb-1">{title}</CardTitle>
-        <CardDescription className="text-gray-600 text-sm">{description}</CardDescription>
-      </CardContent>
-    </Card>
+        <span className="text-xs bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full font-semibold">
+          {value}
+        </span>
+      </div>
+      <h3 className="text-lg font-bold text-gray-800 mb-2">{title}</h3>
+      <p className="text-[15px] text-gray-500 leading-relaxed">{description}</p>
+    </div>
   )
 
   const DashboardView = () => (
@@ -220,184 +216,192 @@ export default function AdminDashboard() {
       </div>
 
       {notifications > 0 && (
-        <Card className="bg-white border border-gray-200 shadow-sm">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <Bell className="h-6 w-6 text-gray-700" />
-              <CardTitle className="text-gray-900">Wichtige Benachrichtigungen</CardTitle>
-              <Badge className="bg-blue-500 text-white">{notifications}</Badge>
+        <div className="bg-white rounded-[20px] p-7 border border-blue-100/60">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+              <Bell className="h-5 w-5 text-blue-600" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-100">
-                <div className="flex items-center gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-500" />
-                  <span className="text-gray-800">{notifications} Rezepte warten auf Genehmigung</span>
-                </div>
-                <Button
-                  onClick={() => setCurrentView("pending")}
-                  size="sm"
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
-                >
-                  <Eye className="h-4 w-4 mr-1" />
-                  Überprüfen
-                </Button>
+            <h3 className="text-lg font-bold text-gray-800">Wichtige Benachrichtigungen</h3>
+            <span className="text-xs bg-blue-600 text-white px-2.5 py-1 rounded-full font-semibold">{notifications}</span>
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between bg-blue-50/50 p-4 rounded-xl border border-blue-100/60">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-500" />
+                <span className="text-[15px] font-medium text-gray-800">{notifications} Rezepte warten auf Genehmigung</span>
               </div>
+              <button
+                onClick={() => setCurrentView("pending")}
+                className="h-9 px-4 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center gap-1.5"
+              >
+                <Eye className="h-4 w-4" />
+                Überprüfen
+              </button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
-      <Card className="bg-white border border-gray-200 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-gray-900">Letzte Aktivitäten</CardTitle>
-          <CardDescription className="text-gray-600">Neueste Aktionen im System</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {pendingRecipes.slice(0, 3).map((recipe) => (
-              <div
-                key={recipe.id}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <ChefHat className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">{recipe.title}</p>
-                    <p className="text-sm text-gray-600">Gesendet von {recipe.user}</p>
-                  </div>
+      <div className="bg-white rounded-[20px] p-7 border border-blue-100/60">
+        <div className="mb-5">
+          <h3 className="text-lg font-bold text-gray-800">Letzte Aktivitäten</h3>
+          <p className="text-[15px] text-gray-500">Neueste Aktionen im System</p>
+        </div>
+        <div className="space-y-3">
+          {pendingRecipes.slice(0, 3).map((recipe) => (
+            <div
+              key={recipe.id}
+              className="flex items-center justify-between p-4 bg-blue-50/50 rounded-xl border border-blue-100/60"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                  <ChefHat className="h-5 w-5 text-blue-600" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">
-                    Ausstehend
-                  </Badge>
-                  <span className="text-sm text-gray-500">{recipe.date}</span>
+                <div>
+                  <p className="font-semibold text-gray-800">{recipe.title}</p>
+                  <p className="text-sm text-gray-500">Gesendet von {recipe.user}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <div className="flex items-center gap-2">
+                <span className="text-xs bg-amber-50 text-amber-600 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">
+                  Ausstehend
+                </span>
+                <span className="text-sm text-gray-500">{recipe.date}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      <Card className="bg-white border border-gray-200 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-gray-900">KI-Funktionen</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="bg-purple-50 border-purple-200 shadow-sm hover:shadow-md transition-all duration-200">
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                    <Brain className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-lg font-semibold text-gray-900">Rezepte mit KI erstellen</CardTitle>
-                    <div className="flex items-center gap-2 text-xs text-purple-600 mt-1">
-                      <Sparkles className="h-3 w-3" />
-                      <span>Bald verfügbar</span>
-                    </div>
-                  </div>
+      <div className="bg-gradient-to-br from-blue-50 via-sky-50/60 to-indigo-50 rounded-[20px] border border-blue-100/60 p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
+              <Brain className="h-7 w-7 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                KI-Funktionen
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">Künstliche Intelligenz für Ihre Küche</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-100 rounded-full">
+            <Shield className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-semibold text-blue-700">Admin</span>
+          </div>
+        </div>
+
+        {/* KI Sub-cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                  Rezepte mit KI erstellen
+                </h3>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full mb-3">
+                  <Sparkles className="h-3 w-3 text-blue-600" />
+                  <span className="text-xs font-semibold text-blue-700">Bald verfügbar</span>
                 </div>
-                <CardDescription className="text-sm text-gray-600">
+                <p className="text-[15px] text-gray-500 leading-relaxed">
                   Lassen Sie unsere KI neue, kreative Rezepte für Sie entwickeln
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-green-50 border-green-200 shadow-sm hover:shadow-md transition-all duration-200">
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                    <Utensils className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-lg font-semibold text-gray-900">Gericht Analysieren</CardTitle>
-                    <div className="flex items-center gap-2 text-xs text-green-600 mt-1">
-                      <Utensils className="h-3 w-3" />
-                      <span>Bald verfügbar</span>
-                    </div>
-                  </div>
-                </div>
-                <CardDescription className="text-sm text-gray-600">
-                  Fotografieren Sie ein Gericht und erhalten Sie das passende Rezept
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-orange-50 border-orange-200 shadow-sm hover:shadow-md transition-all duration-200">
-              <CardHeader className="pb-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                    <MessageCircle className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-lg font-semibold text-gray-900">Koch-Experte Chat</CardTitle>
-                    <div className="flex items-center gap-2 text-xs text-orange-600 mt-1">
-                      <Bot className="h-3 w-3" />
-                      <span>Bald verfügbar</span>
-                    </div>
-                  </div>
-                </div>
-                <CardDescription className="text-sm text-gray-600">
-                  Stellen Sie Fragen an unseren KI-Koch-Experten
-                </CardDescription>
-              </CardHeader>
-            </Card>
+                </p>
+              </div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+
+          <div className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                <Utensils className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                  Gericht Analysieren
+                </h3>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full mb-3">
+                  <Utensils className="h-3 w-3 text-blue-600" />
+                  <span className="text-xs font-semibold text-blue-700">Bald verfügbar</span>
+                </div>
+                <p className="text-[15px] text-gray-500 leading-relaxed">
+                  Fotografieren Sie ein Gericht und erhalten Sie das passende Rezept
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                <MessageCircle className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                  Koch-Experte Chat
+                </h3>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full mb-3">
+                  <Bot className="h-3 w-3 text-blue-600" />
+                  <span className="text-xs font-semibold text-blue-700">Bald verfügbar</span>
+                </div>
+                <p className="text-[15px] text-gray-500 leading-relaxed">
+                  Stellen Sie Fragen an unseren KI-Koch-Experten
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                onClick={handleBackToMain}
-                disabled={isNavigating}
-                variant="outline"
-                size="sm"
-                className="border-gray-200 text-gray-600 hover:bg-gray-50 rounded-lg w-10 h-10 p-0 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
-                title="Zurück zur Startseite"
-              >
-                <ArrowLeft className={`h-4 w-4 ${isNavigating ? "animate-pulse" : ""}`} />
-              </Button>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
-                  <Shield className="h-6 w-6 text-red-600" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-semibold text-gray-900">Administration</h1>
-                  <p className="text-sm text-gray-600">Verwaltungspanel</p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-blue-50 overflow-x-hidden">
+      {/* Decorative background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+      </div>
+
+      {/* Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleBackToMain}
+              disabled={isNavigating}
+              className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors disabled:opacity-50"
+              title="Zurück zur Startseite"
+            >
+              <ArrowLeft className={`h-5 w-5 text-blue-600 ${isNavigating ? "animate-pulse" : ""}`} />
+            </button>
+            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+            <div className="leading-none">
+              <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
+              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
             </div>
-        
           </div>
         </div>
+        {/* Gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
       </div>
 
       {currentView !== "dashboard" && (
-        <div className="bg-white border-b border-gray-100">
-          <div className="container mx-auto px-6 py-3">
+        <div className="fixed top-16 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm border-b border-blue-100/60">
+          <div className="max-w-7xl mx-auto px-6 py-3">
             <div className="flex items-center gap-4">
-              <Button
+              <button
                 onClick={() => setCurrentView("dashboard")}
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:bg-gray-100"
+                className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl px-3 py-2 transition-colors"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
+                <ArrowLeft className="h-4 w-4" />
                 Dashboard
-              </Button>
-              <div className="text-sm text-gray-500">
+              </button>
+              <div className="text-sm font-medium text-gray-500">
                 / {currentView === "recipes" && "Rezepteverwaltung"}
                 {currentView === "users" && "Benutzerverwaltung"}
                 {currentView === "subadmins" && "Sub-Administratoren"}
@@ -408,7 +412,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      <div className="container mx-auto px-6 py-8">
+      <div className={`relative max-w-7xl mx-auto px-6 pb-12 ${currentView !== "dashboard" ? "pt-32" : "pt-24"}`}>
         {currentView === "dashboard" && <DashboardView />}
         {currentView === "recipes" && <RecipeManagement />}
         {currentView === "users" && <UserManagement users={users} setUsers={setUsers} />}

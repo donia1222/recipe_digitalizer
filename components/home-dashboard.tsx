@@ -3,14 +3,12 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, } from "@/components/ui/card"
 import {
   Camera,
   Upload,
   Scan,
   ChefHat,
   ArrowRight,
-  ArrowLeft,
   Users,
   Heart,
   BookOpen,
@@ -18,8 +16,6 @@ import {
   Shield,
   Plus,
   Send,
-  ArrowDown,
-  ArrowUp,
   Utensils,
   MessageCircle,
   Bot,
@@ -28,8 +24,6 @@ import {
   Download,
   Sparkles,
   Edit,
-
-
 } from "lucide-react"
 
 interface HomeDashboardProps {
@@ -52,25 +46,9 @@ export default function HomeDashboard({
   onBackToLanding,
 }: HomeDashboardProps) {
   const router = useRouter()
-  const [typedText, setTypedText] = useState("")
   const [pendingNotifications, setPendingNotifications] = useState(0)
   const [pendingRecipes, setPendingRecipes] = useState<any[]>([])
   const [showNotifications, setShowNotifications] = useState(false)
-  const fullText = "Digitalisieren, erstellen und entdecken Sie Rezepte mit modernster KI-Technologie"
-
-  useEffect(() => {
-    let currentIndex = 0
-    const typingInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setTypedText(fullText.slice(0, currentIndex))
-        currentIndex++
-      } else {
-        clearInterval(typingInterval)
-      }
-    }, 50)
-
-    return () => clearInterval(typingInterval)
-  }, [])
 
   // Load pending recipes notifications (only for admin)
   useEffect(() => {
@@ -96,7 +74,7 @@ export default function HomeDashboard({
               // SIEMPRE convertir Usuario # a Admin
               if (displayUserName.includes('Usuario #') || displayUserName.startsWith('Usuario #')) {
                 displayUserName = 'Admin'
-                console.log('🔧 Converting', recipe.user_name, 'to Admin in notifications')
+                console.log('Converting', recipe.user_name, 'to Admin in notifications')
               }
 
               return {
@@ -107,7 +85,6 @@ export default function HomeDashboard({
 
             setPendingNotifications(pendingCount)
             setPendingRecipes(fixedRecipes)
-            console.log('📧 Loaded pending notifications:', pendingCount)
           } else {
             setPendingNotifications(0)
             setPendingRecipes([])
@@ -147,414 +124,426 @@ export default function HomeDashboard({
   }, [showNotifications])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-     
-
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                  <ChefHat className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                <h1 className="text-lg font-semibold text-gray-900">Rezept Archiv</h1>
-                  <p className="text-sm text-gray-600">Digitale Rezeptsammlung mit KI</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* Notifications Bell - Only for Admin */}
-              {userRole === 'admin' && pendingNotifications > 0 && (
-                <div className="relative" data-notification-dropdown>
-                  <Button
-                    onClick={() => setShowNotifications(!showNotifications)}
-                    variant="outline"
-                    size="sm"
-                    className="relative border-gray-300 hover:bg-gray-50"
-                  >
-                    <Shield className="h-4 w-4" />
-                    {pendingNotifications > 0 && (
-                      <Badge className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs min-w-[16px] h-4 flex items-center justify-center rounded-full px-1">
-                        {pendingNotifications}
-                      </Badge>
-                    )}
-                  </Button>
-
-                  {/* Notifications Dropdown */}
-                  {showNotifications && (
-                    <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50">
-                      <div className="p-4 border-b border-gray-200">
-                        <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-                          <Shield className="h-4 w-4" />
-                         Ausstehende Rezepte
-                        </h3>
-                      </div>
-                      <div className="max-h-64 overflow-y-auto">
-                        {pendingRecipes.length === 0 ? (
-                          <div className="p-4 text-center text-gray-500">
-                            Keine ausstehenden Rezepte
-                          </div>
-                        ) : (
-                          pendingRecipes.slice(0, 5).map((recipe: any) => (
-                            <div
-                              key={recipe.id}
-                              onClick={handleNotificationClick}
-                              className="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50"
-                            >
-                              <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0">
-                                  <ChefHat className="h-5 w-5 text-blue-500" />
-                                </div>
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium text-gray-800">
-                                    {recipe.title || 'Neues Rezept'}
-                                  </p>
-                                  <p className="text-xs text-gray-600">
-                                    Von: {recipe.user_name || 'Unbekannt'}
-                                  </p>
-                                  <p className="text-xs text-gray-500 mt-1">
-                                    {new Date(recipe.created_at || Date.now()).toLocaleDateString('de-DE')}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                      {pendingRecipes.length > 0 && (
-                        <div className="p-4 border-t border-gray-200">
-                          <Button
-                            onClick={handleNotificationClick}
-                            className="w-full text-sm"
-                            size="sm"
-                          >
-                            Alle anzeigen ({pendingNotifications})
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <Button
-                onClick={handleLogout}
-                variant="outline"
-               className="text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20 bg-transparent"
-              >
-                <LogOut className="h-4 w-4 " />
-
-              </Button>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-blue-50 overflow-x-hidden">
+      {/* Decorative background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-indigo-100/15 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 pt-24 pb-12">
-        <div className="text-center mb-12">
-      
+      {/* Header */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+            <div className="leading-none">
+              <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
+              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Notifications Bell - Only for Admin */}
+            {userRole === 'admin' && pendingNotifications > 0 && (
+              <div className="relative" data-notification-dropdown>
+                <button
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="relative w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+                >
+                  <Shield className="h-5 w-5 text-blue-600" />
+                  {pendingNotifications > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs min-w-[18px] h-[18px] flex items-center justify-center rounded-full px-1 font-semibold">
+                      {pendingNotifications}
+                    </span>
+                  )}
+                </button>
+
+                {/* Notifications Dropdown */}
+                {showNotifications && (
+                  <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-[20px] shadow-[0_12px_32px_rgba(0,0,0,0.1)] border border-blue-100/60 z-50">
+                    <div className="p-5 border-b border-gray-100">
+                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-blue-600" />
+                        Ausstehende Rezepte
+                      </h3>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto">
+                      {pendingRecipes.length === 0 ? (
+                        <div className="p-5 text-center text-gray-500">
+                          Keine ausstehenden Rezepte
+                        </div>
+                      ) : (
+                        pendingRecipes.slice(0, 5).map((recipe: any) => (
+                          <div
+                            key={recipe.id}
+                            onClick={handleNotificationClick}
+                            className="p-4 border-b border-gray-50 cursor-pointer hover:bg-blue-50/40 transition-colors"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+                                <ChefHat className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-semibold text-gray-800">
+                                  {recipe.title || 'Neues Rezept'}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  Von: {recipe.user_name || 'Unbekannt'}
+                                </p>
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {new Date(recipe.created_at || Date.now()).toLocaleDateString('de-DE')}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    {pendingRecipes.length > 0 && (
+                      <div className="p-4 border-t border-gray-100">
+                        <button
+                          onClick={handleNotificationClick}
+                          className="w-full h-10 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
+                        >
+                          Alle anzeigen ({pendingNotifications})
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <button
+              onClick={handleLogout}
+              className="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center hover:bg-red-100 transition-colors"
+            >
+              <LogOut className="h-5 w-5 text-red-500" />
+            </button>
+          </div>
+        </div>
+        {/* Gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
+      </div>
+
+      {/* Content */}
+      <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-12">
+        {/* Hero badge */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5">
+            <Sparkles className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-semibold text-blue-700">Powered by Chat GPT</span>
+          </div>
         </div>
 
+        {/* Digitalisieren & Manuelle cards (admin/worker only) */}
         {(userRole === "admin" || userRole === "worker") && (
-          <div className="max-w-6xl mx-auto mb-12">
-            <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-              <Card
-                className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
+          <div className="mb-8">
+            <div className="grid gap-5 grid-cols-1 md:grid-cols-2">
+              {/* Rezepte Digitalisieren */}
+              <div
+                className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
                 onClick={onStartDigitalization}
               >
-                <CardHeader className="pb-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-blue-200 transition-colors duration-200 mb-4">
-                    <Scan className="h-6 w-6 text-blue-600" />
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+                  <Scan className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">Rezepte Digitalisieren</h3>
+                <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
+                  Scannen oder fotografieren Sie Ihre Rezepte, um sie zu digitalisieren
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Camera className="h-3.5 w-3.5 text-blue-500" />
+                    </div>
+                    <span>Foto machen</span>
                   </div>
-                  <CardTitle className="text-xl font-semibold text-gray-900">Rezepte Digitalisieren</CardTitle>
-                  <CardDescription className="text-gray-600">
-                    Scannen oder fotografieren Sie Ihre Rezepte, um sie zu digitalisieren
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Camera className="h-4 w-4" />
-                      <span>Foto machen</span>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Upload className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Upload className="h-4 w-4" />
-                      <span>Bild hochladen</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Scan className="h-4 w-4" />
-                      <span>Scannen</span>
-                    </div>
+                    <span>Bild hochladen</span>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Scan className="h-3.5 w-3.5 text-blue-500" />
+                    </div>
+                    <span>Scannen</span>
+                  </div>
+                </div>
+              </div>
 
+              {/* Manuelle Rezepte */}
               {onOpenManualRecipes && (
-                <Card
-                  className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
+                <div
+                  className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
                   onClick={onOpenManualRecipes}
                 >
-                  <CardHeader className="pb-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-green-200 transition-colors duration-200 mb-4">
-                      <Edit className="h-6 w-6 text-green-600" />
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+                    <Edit className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">Manuelle Rezepte</h3>
+                  <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
+                    Erstellen Sie Rezepte von Hand mit unserem benutzerfreundlichen Formular
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                        <Edit className="h-3.5 w-3.5 text-blue-500" />
+                      </div>
+                      <span>Rezept schreiben</span>
                     </div>
-                    <CardTitle className="text-xl font-semibold text-gray-900">Manuelle Rezepte</CardTitle>
-                    <CardDescription className="text-gray-600">
-                      Erstellen Sie Rezepte von Hand mit unserem benutzerfreundlichen Formular
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Edit className="h-4 w-4" />
-                        <span>Rezept schreiben</span>
+                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                        <Plus className="h-3.5 w-3.5 text-blue-500" />
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Plus className="h-4 w-4" />
-                        <span>Zutaten hinzufügen</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Send className="h-4 w-4" />
-                        <span>An Admin senden</span>
-                      </div>
+                      <span>Zutaten hinzufügen</span>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                        <Send className="h-3.5 w-3.5 text-blue-500" />
+                      </div>
+                      <span>An Admin senden</span>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>
         )}
 
+        {/* Archiv, Profil, Admin cards */}
         <div
-          className={`grid gap-6 max-w-6xl mx-auto mb-8 ${
+          className={`grid gap-5 mb-8 ${
             userRole === "admin"
               ? "grid-cols-1 md:grid-cols-2"
               : userRole === "worker"
                 ? "grid-cols-1 md:grid-cols-2"
                 : userRole === "guest"
-                  ? "grid-cols-1 max-w-2xl"
+                  ? "grid-cols-1 max-w-2xl mx-auto"
                   : "grid-cols-1 md:grid-cols-3"
           }`}
         >
-          <Card
-            className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group cursor-pointer"
+          {/* Rezept Archiv */}
+          <div
+            className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
             onClick={onOpenArchive}
           >
-            <CardHeader className="pb-4">
-              <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-emerald-200 transition-colors duration-200 mb-4">
-                <BookOpen className="h-6 w-6 text-emerald-600" />
-              </div>
-              <CardTitle className="text-xl font-semibold text-gray-900">Rezept Archiv</CardTitle>
-              <CardDescription className="text-gray-600">
-                {userRole === 'guest'
-                  ? 'Rezepte ansehen und durchsuchen'
-                  : 'Ihre digitalisierten Rezepte nach Kategorien organisieren und bearbeiten'
-                }
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {userRole === 'guest' ? (
-                  <>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <BookOpen className="h-4 w-4" />
-                      <span>Rezepte ansehen</span>
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+              <BookOpen className="h-6 w-6 text-blue-600" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Rezept Archiv</h3>
+            <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
+              {userRole === 'guest'
+                ? 'Rezepte ansehen und durchsuchen'
+                : 'Ihre digitalisierten Rezepte nach Kategorien organisieren und bearbeiten'
+              }
+            </p>
+            <div className="space-y-3">
+              {userRole === 'guest' ? (
+                <>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <BookOpen className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Search className="h-4 w-4" />
-                      <span>Bibliothek durchsuchen</span>
+                    <span>Rezepte ansehen</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Search className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <MessageCircle className="h-4 w-4" />
-                      <span>Kommentare lesen</span>
+                    <span>Bibliothek durchsuchen</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <MessageCircle className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Download className="h-4 w-4" />
-                      <span>Rezepte herunterladen</span>
+                    <span>Kommentare lesen</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Download className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <BookOpen className="h-4 w-4" />
-                      <span>Rezepte verwalten</span>
+                    <span>Rezepte herunterladen</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <BookOpen className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <ChefHat className="h-4 w-4" />
-                      <span>Kategorien erstellen</span>
+                    <span>Rezepte verwalten</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <ChefHat className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Heart className="h-4 w-4" />
-                      <span>Favoriten markieren</span>
+                    <span>Kategorien erstellen</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Heart className="h-3.5 w-3.5 text-blue-500" />
                     </div>
-                  </>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                    <span>Favoriten markieren</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
 
+          {/* Benutzer Profil (worker) */}
           {userRole === "worker" && (
-            <Card
-              className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group cursor-pointer"
+            <div
+              className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
               onClick={onOpenUsers}
             >
-              <CardHeader className="pb-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-blue-200 transition-colors duration-200 mb-4">
-                  <Users className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+                <Users className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Benutzer Profil</h3>
+              <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
+                Eigene Rezepte erstellen, verwalten und zur Sammlung beitragen
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                    <Plus className="h-3.5 w-3.5 text-blue-500" />
+                  </div>
+                  <span>Rezepte erstellen</span>
                 </div>
-                <CardTitle className="text-xl font-semibold text-gray-900">Benutzer Profil</CardTitle>
-                <CardDescription className="text-gray-600">
-                  Eigene Rezepte erstellen, verwalten und zur Sammlung beitragen
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Plus className="h-4 w-4" />
-                    <span>Rezepte erstellen</span>
+                <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                    <BookOpen className="h-3.5 w-3.5 text-blue-500" />
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <BookOpen className="h-4 w-4" />
-                    <span>Eigene Sammlung</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Send className="h-4 w-4" />
-                    <span>Admin Freigabe</span>
-                  </div>
+                  <span>Eigene Sammlung</span>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                    <Send className="h-3.5 w-3.5 text-blue-500" />
+                  </div>
+                  <span>Admin Freigabe</span>
+                </div>
+              </div>
+            </div>
           )}
 
-
-
-
+          {/* Administration (admin) */}
           {userRole === "admin" && (
-            <Card
-              className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 group cursor-pointer"
+            <div
+              className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
               onClick={() => router.push("/admin")}
             >
-              <CardHeader className="pb-4">
-                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-red-200 transition-colors duration-200 mb-4">
-                  <Shield className="h-6 w-6 text-red-600" />
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+                <Shield className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Administration</h3>
+              <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
+                Verwalten von Benutzern, Rezepten, Subadministratoren und Systemkonfiguration
+              </p>
+              <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                  <ArrowRight className="h-3.5 w-3.5 text-blue-500" />
                 </div>
-                <CardTitle className="text-xl font-semibold text-gray-900">Administration</CardTitle>
-                <CardDescription className="text-gray-600">
-                  Verwalten von Benutzern, Rezepten, Subadministratoren und Systemkonfiguration
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <ArrowRight className="h-4 w-4" />
-                  <span>Admin Panel</span>
-                </div>
-              </CardContent>
-            </Card>
+                <span>Admin Panel</span>
+              </div>
+            </div>
           )}
-
         </div>
 
+        {/* KI-Funktionen Section (admin only) */}
         {userRole === "admin" && (
-          <div className="max-w-6xl mx-auto mb-8">
-            <Card className="bg-gradient-to-br from-indigo-50 via-white to-purple-50 border border-indigo-200 shadow-lg">
-              <CardHeader className="pb-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <Brain className="h-7 w-7 text-white" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                        KI-Funktionen
-                      </CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Künstliche Intelligenz für Ihre Küche</p>
-                    </div>
+          <div className="mb-8">
+            <div className="bg-gradient-to-br from-blue-50 via-sky-50/60 to-indigo-50 rounded-[20px] border border-blue-100/60 p-8">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
+                    <Brain className="h-7 w-7 text-white" />
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-1 bg-indigo-100 rounded-full">
-                    <Shield className="h-4 w-4 text-indigo-600" />
-                    <span className="text-sm font-medium text-indigo-700">Admin</span>
+                  <div>
+                    <h2 className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                      KI-Funktionen
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-1">Künstliche Intelligenz für Ihre Küche</p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Rezepte mit KI erstellen */}
-                  <Card className="group bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                          <Brain className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-lg font-bold text-gray-900 mb-2 group-hover:text-purple-700 transition-colors">
-                            Rezepte mit KI erstellen
-                          </CardTitle>
-                          <div className="flex items-center gap-2 px-3 py-1 bg-purple-100 rounded-full w-fit mb-3">
-                            <Sparkles className="h-3 w-3 text-purple-600" />
-                            <span className="text-xs font-medium text-purple-700">Bald verfügbar</span>
-                          </div>
-                          <CardDescription className="text-sm text-gray-600 leading-relaxed">
-                            Lassen Sie unsere KI neue, kreative Rezepte für Sie entwickeln
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-
-                  {/* Gericht Analysieren */}
-                  <Card className="group bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                          <Utensils className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emerald-700 transition-colors">
-                            Gericht Analysieren
-                          </CardTitle>
-                          <div className="flex items-center gap-2 px-3 py-1 bg-emerald-100 rounded-full w-fit mb-3">
-                            <Utensils className="h-3 w-3 text-emerald-600" />
-                            <span className="text-xs font-medium text-emerald-700">Bald verfügbar</span>
-                          </div>
-                          <CardDescription className="text-sm text-gray-600 leading-relaxed">
-                            Fotografieren Sie ein Gericht und erhalten Sie das passende Rezept
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-
-                  {/* Koch-Experte Chat */}
-                  <Card className="group bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                          <MessageCircle className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-700 transition-colors">
-                            Koch-Experte Chat
-                          </CardTitle>
-                          <div className="flex items-center gap-2 px-3 py-1 bg-orange-100 rounded-full w-fit mb-3">
-                            <Bot className="h-3 w-3 text-orange-600" />
-                            <span className="text-xs font-medium text-orange-700">Bald verfügbar</span>
-                          </div>
-                          <CardDescription className="text-sm text-gray-600 leading-relaxed">
-                            Stellen Sie Fragen an unseren KI-Koch-Experten
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-100 rounded-full">
+                  <Shield className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-semibold text-blue-700">Admin</span>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+
+              {/* KI Sub-cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {/* Rezepte mit KI erstellen */}
+                <div className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                      <Brain className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                        Rezepte mit KI erstellen
+                      </h3>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full mb-3">
+                        <Sparkles className="h-3 w-3 text-blue-600" />
+                        <span className="text-xs font-semibold text-blue-700">Bald verfügbar</span>
+                      </div>
+                      <p className="text-[15px] text-gray-500 leading-relaxed">
+                        Lassen Sie unsere KI neue, kreative Rezepte für Sie entwickeln
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Gericht Analysieren */}
+                <div className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                      <Utensils className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                        Gericht Analysieren
+                      </h3>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full mb-3">
+                        <Utensils className="h-3 w-3 text-blue-600" />
+                        <span className="text-xs font-semibold text-blue-700">Bald verfügbar</span>
+                      </div>
+                      <p className="text-[15px] text-gray-500 leading-relaxed">
+                        Fotografieren Sie ein Gericht und erhalten Sie das passende Rezept
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Koch-Experte Chat */}
+                <div className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                      <MessageCircle className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors">
+                        Koch-Experte Chat
+                      </h3>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full mb-3">
+                        <Bot className="h-3 w-3 text-blue-600" />
+                        <span className="text-xs font-semibold text-blue-700">Bald verfügbar</span>
+                      </div>
+                      <p className="text-[15px] text-gray-500 leading-relaxed">
+                        Stellen Sie Fragen an unseren KI-Koch-Experten
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
-
       </div>
     </div>
   )

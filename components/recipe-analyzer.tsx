@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { Download, Printer, Share, ImagePlus, X, ChevronLeft, ChevronRight, Eye, Users, Edit, Trash2, ChefHat, Calendar } from "lucide-react"
+import { Download, Printer, Share, ImagePlus, X, ChevronLeft, ChevronRight, Eye, Users, Edit, Trash2, ChefHat, Calendar, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -123,6 +123,32 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
   const [showGalleryModal, setShowGalleryModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [editedRecipe, setEditedRecipe] = useState(recipe)
+  const [heroImageIndex, setHeroImageIndexState] = useState(0)
+
+  // Persist heroImageIndex in localStorage
+  const setHeroImageIndex = (index: number) => {
+    setHeroImageIndexState(index)
+    if (recipeId) {
+      try {
+        localStorage.setItem(`recipe-hero-${recipeId}`, index.toString())
+      } catch (e) { /* ignore */ }
+    }
+  }
+
+  // Load saved heroImageIndex on mount
+  React.useEffect(() => {
+    if (recipeId) {
+      try {
+        const saved = localStorage.getItem(`recipe-hero-${recipeId}`)
+        if (saved !== null) {
+          const idx = parseInt(saved)
+          if (!isNaN(idx) && idx >= 0) {
+            setHeroImageIndexState(idx)
+          }
+        }
+      } catch (e) { /* ignore */ }
+    }
+  }, [recipeId])
   const [currentUserRole, setCurrentUserRole] = useState<string | null>(null)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [canEditRecipe, setCanEditRecipe] = useState(false)
@@ -298,6 +324,51 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
     setEditedRecipe(recipe)
   }, [recipe])
 
+  // Helper: find the numeric DB id for a recipe, trying multiple approaches
+  const findNumericId = async (rid: string): Promise<number | null> => {
+    // 1. If it's already numeric, use it directly
+    if (!isNaN(parseInt(rid)) && !rid.includes('-')) {
+      return parseInt(rid);
+    }
+
+    // 2. Try direct API fetch by id (some APIs accept string recipe_id in the id param)
+    try {
+      const directResponse = await fetch(`https://web.lweb.ch/recipedigitalizer/apis/recipes-simple.php?id=${rid}`);
+      const directData = await directResponse.json();
+      if (directData.success && directData.data) {
+        const numId = directData.data.id;
+        if (numId) {
+          console.log('🔍 Found numeric ID via direct fetch:', numId);
+          return numId;
+        }
+      }
+    } catch (e) {
+      console.log('Direct fetch failed, trying search...');
+    }
+
+    // 3. Fetch all recipes and search with flexible matching
+    try {
+      const searchResponse = await fetch(`https://web.lweb.ch/recipedigitalizer/apis/recipes-simple.php`);
+      const searchData = await searchResponse.json();
+      if (searchData.success && searchData.data) {
+        const cleanRid = rid.replace(/"/g, '').trim();
+        const found = searchData.data.find((r: any) => {
+          const rRecipeId = (r.recipe_id || '').replace(/"/g, '').trim();
+          const rId = r.id?.toString() || '';
+          return rRecipeId === cleanRid || rId === cleanRid || rRecipeId === rid || rId === rid;
+        });
+        if (found) {
+          console.log('🔍 Found numeric ID via search:', found.id);
+          return found.id;
+        }
+      }
+    } catch (e) {
+      console.error('Search fetch failed:', e);
+    }
+
+    return null;
+  }
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
@@ -312,20 +383,7 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
           try {
             console.log('🖼️ Syncing additional images to database:', { recipeId, imagesCount: updatedImages.length });
 
-            // Primero necesitamos obtener el ID numérico de la base de datos
-            // buscando por recipe_id (string) para obtener el id (number)
-            const searchResponse = await fetch(`https://web.lweb.ch/recipedigitalizer/apis/recipes-simple.php`);
-            const searchData = await searchResponse.json();
-
-            let numericId = null;
-            let foundRecipe = null;
-            if (searchData.success && searchData.data) {
-              foundRecipe = searchData.data.find((r: any) => r.recipe_id === recipeId || r.id.toString() === recipeId);
-              if (foundRecipe) {
-                numericId = foundRecipe.id;
-                console.log('🔍 Found numeric ID for recipe:', { recipeId, numericId });
-              }
-            }
+            const numericId = await findNumericId(recipeId);
 
             if (!numericId) {
               console.error('❌ No se pudo encontrar el ID numérico para:', recipeId);
@@ -382,23 +440,22 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
     const updatedImages = recipeImages.filter((_, i) => i !== index)
     setRecipeImages(updatedImages)
 
+    // Reset hero if the removed image was the hero
+    if (heroImageIndex > 0) {
+      const heroInAll = originalImage ? heroImageIndex - 1 : heroImageIndex;
+      if (heroInAll === index) {
+        setHeroImageIndex(0);
+      } else if (heroInAll > index) {
+        setHeroImageIndex(heroImageIndex - 1);
+      }
+    }
+
     // Sync with database directly
     if (recipeId) {
       try {
         console.log('🗑️ Syncing image deletion to database:', { recipeId, remainingImages: updatedImages.length });
 
-        // Primero necesitamos obtener el ID numérico de la base de datos
-        const searchResponse = await fetch(`https://web.lweb.ch/recipedigitalizer/apis/recipes-simple.php`);
-        const searchData = await searchResponse.json();
-
-        let numericId = null;
-        if (searchData.success && searchData.data) {
-          const recipe = searchData.data.find((r: any) => r.recipe_id === recipeId || r.id.toString() === recipeId);
-          if (recipe) {
-            numericId = recipe.id;
-            console.log('🔍 Found numeric ID for recipe deletion:', { recipeId, numericId });
-          }
-        }
+        const numericId = await findNumericId(recipeId);
 
         if (!numericId) {
           console.error('❌ No se pudo encontrar el ID numérico para eliminar:', recipeId);
@@ -812,6 +869,9 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
   // Combine all images (original + additional)
   const allImages = originalImage ? [originalImage, ...recipeImages] : recipeImages
 
+  // Clamp heroImageIndex if images were removed
+  const safeHeroIndex = heroImageIndex < allImages.length ? heroImageIndex : 0
+
   const openGallery = (index: number) => {
     setCurrentImageIndex(index)
     setShowGalleryModal(true)
@@ -873,93 +933,86 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
   return (
     <div className="space-y-6 mb-20">
       {/* Action buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:justify-between border-b border-gray-200 pb-4 mt-20">
-        <div className="flex flex-wrap gap-2">
-          {canEditRecipe && (
-            <Dialog open={showImageModal} onOpenChange={setShowImageModal}>
-              <DialogTrigger asChild>
-                  <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 hover:bg-green-50 hover:border-green-300"
-                >
-                  <ImagePlus className="h-4 w-4" />
-                  Bild hinzufügen
-                </Button>
-              </DialogTrigger>
-            <DialogContent className="sm:max-w-md bg-white border border-gray-200">
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-2 text-gray-900">
-                  <ImagePlus className="h-5 w-5 text-gray-600" />
-                  Bild zum Rezept hinzufügen
-                </DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="grid w-full max-w-sm items-center gap-1.5">
-                  <Label htmlFor="recipe-image" className="text-gray-700">
-                    Bild auswählen
-                  </Label>
-                  <Input
-                    id="recipe-image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="cursor-pointer border-gray-300 focus:border-blue-500"
-                  />
-                </div>
-                <p className="text-sm text-gray-600">Bilder werden lokal mit dem Rezept gespeichert.</p>
-              </div>
-            </DialogContent>
-            </Dialog>
-          )}
-        </div>
-
-        <div className="overflow-x-auto mt-2 sm:mt-0">
-          <div className="flex gap-2 min-w-max pb-2">
-          
-            {onServingsClick && (
-              <Button
-                onClick={onServingsClick}
-                size="sm"
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 whitespace-nowrap"
-              >
-                <Users className="h-4 w-4" />
-                <span>Portionen ({currentServings || 2})</span>
-              </Button>
+      <div className="bg-white rounded-[20px] p-5 mt-2">
+        <div className="flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
+          <div className="flex flex-wrap gap-2">
+            {canEditRecipe && (
+              <Dialog open={showImageModal} onOpenChange={setShowImageModal}>
+                <DialogTrigger asChild>
+                  <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-50 text-blue-600 text-sm font-semibold hover:bg-blue-100 transition-colors">
+                    <ImagePlus className="h-4 w-4" />
+                    Bild hinzufügen
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md bg-white rounded-[20px] border border-blue-100/60">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2 text-gray-900 font-bold">
+                      <ImagePlus className="h-5 w-5 text-blue-600" />
+                      Bild zum Rezept hinzufügen
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="grid w-full max-w-sm items-center gap-1.5">
+                      <Label htmlFor="recipe-image" className="text-gray-700">
+                        Bild auswählen
+                      </Label>
+                      <Input
+                        id="recipe-image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="cursor-pointer border-gray-300 focus:border-blue-500 rounded-xl"
+                      />
+                    </div>
+                    <p className="text-sm text-gray-500">Bilder werden lokal mit dem Rezept gespeichert.</p>
+                  </div>
+                </DialogContent>
+              </Dialog>
             )}
-            <Button
-              onClick={handleShare}
-              size="sm"
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              <Share className="h-4 w-4" />
-              <span>Teilen</span>
-            </Button>
-            <Button
-              onClick={handleSaveAsImage}
-              size="sm"
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              <Download className="h-4 w-4" />
-              <span>Herunterladen</span>
-            </Button>
-            <Button
-              onClick={handlePrint}
-              size="sm"
-              className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white transition-colors duration-200 whitespace-nowrap"
-            >
-              <Printer className="h-4 w-4" />
-              <span>Drucken</span>
-            </Button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <div className="flex gap-2 min-w-max">
+              {onServingsClick && (
+                <button
+                  onClick={onServingsClick}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap"
+                >
+                  <Users className="h-4 w-4" />
+                  Portionen ({currentServings || 2})
+                </button>
+              )}
+              <button
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap"
+              >
+                <Share className="h-4 w-4" />
+                Teilen
+              </button>
+              <button
+                onClick={handleSaveAsImage}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap"
+              >
+                <Download className="h-4 w-4" />
+                Herunterladen
+              </button>
+              <button
+                onClick={handlePrint}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors whitespace-nowrap"
+              >
+                <Printer className="h-4 w-4" />
+                Drucken
+              </button>
+            </div>
           </div>
         </div>
       </div>
-     {/* Mensaje temporal de aprobación - antes de comentarios */}
+     {/* Mensaje temporal de aprobación */}
       {approvalMessage && (
-        <div className="mt-8 mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg animate-in slide-in-from-bottom-4 duration-500">
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <p className="text-green-800 dark:text-green-200 font-medium text-sm">
+        <div className="p-5 bg-white rounded-[20px] border border-emerald-100">
+          <div className="flex items-center space-x-3">
+            <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
+            <p className="text-emerald-700 font-semibold text-sm">
               {approvalMessage}
             </p>
           </div>
@@ -967,12 +1020,12 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
       )}
       {/* Hero Image with Title Overlay */}
       {allImages.length > 0 && (
-        <div className="space-y-6">
-          {/* Hero Section - First Image with Title */}
-          <div className="relative h-96 rounded-xl overflow-hidden shadow-xl">
+        <div className="space-y-5">
+          {/* Hero Section - Selected cover image with Title */}
+          <div className="relative h-96 rounded-[20px] overflow-hidden shadow-[0_12px_32px_rgba(0,0,0,0.1)]">
             <Image
-              src={allImages[0] || "/placeholder.svg"}
-              alt={originalImage ? "Imagen original" : "Rezeptbild"}
+              src={allImages[safeHeroIndex] || allImages[0] || "/placeholder.svg"}
+              alt="Rezeptbild"
               fill
               className="object-cover"
             />
@@ -981,16 +1034,16 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
 
             {/* Title and info overlay */}
             <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-2xl text-balance">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 drop-shadow-2xl text-balance tracking-tight">
                 {getRecipeTitle()}
               </h2>
               {(userId || createdAt) && (
-                <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-3 shadow-lg">
+                <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-white/30 rounded-full flex items-center justify-center">
                       <ChefHat className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-sm font-medium text-white">Von {userName}</span>
+                    <span className="text-sm font-semibold text-white">Von {userName}</span>
                   </div>
                   {createdAt && (
                     <>
@@ -1005,45 +1058,72 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
               )}
             </div>
 
-
             {/* Click to view all images */}
             <div
               className="absolute inset-0 cursor-pointer group"
-              onClick={() => openGallery(0)}
+              onClick={() => openGallery(safeHeroIndex)}
             >
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200"></div>
-              <div className="absolute bottom-4 right-4 bg-white/20 backdrop-blur-sm text-white px-3 py-2 rounded-full text-sm font-medium group-hover:bg-white/30 transition-colors duration-200">
-                <Eye className="h-4 w-4 inline mr-1" />
+              <div className="absolute bottom-4 right-4 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-sm font-semibold group-hover:bg-white/30 transition-colors duration-200">
+                <Eye className="h-4 w-4 inline mr-1.5" />
                 {allImages.length > 1 ? `${allImages.length} Bilder` : '1 Bild'}
               </div>
             </div>
           </div>
 
-          {/* Additional Images Gallery */}
+          {/* Additional Images Gallery - shows all images except the current hero */}
           {allImages.length > 1 && (
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <ImagePlus className="h-5 w-5 text-gray-600" />
+            <div className="bg-white rounded-[20px] p-5">
+              <h4 className="text-base font-bold text-gray-800 flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <ImagePlus className="h-4 w-4 text-blue-600" />
+                </div>
                 Weitere Bilder ({allImages.length - 1})
               </h4>
               <div className="overflow-x-auto">
-                <div className="flex gap-4 px-2 py-2" style={{ minWidth: "max-content" }}>
-                  {allImages.slice(1).map((image, index) => (
-                    <div key={index + 1} className="relative group flex-none">
+                <div className="flex gap-3 px-1 py-3" style={{ minWidth: "max-content" }}>
+                  {allImages.map((image, allImagesIndex) => {
+                    // Skip the current hero image (it's shown above)
+                    if (allImagesIndex === safeHeroIndex) return null;
+                    const isOriginal = allImagesIndex === 0;
+                    return (
+                    <div key={allImagesIndex} className="relative group flex-none">
                       <div
-                        className="w-28 h-28 sm:w-36 sm:h-36 relative overflow-hidden rounded-lg border-2 border-gray-200 cursor-pointer hover:border-blue-300 transition-colors duration-200"
-                        onClick={() => openGallery(index + 1)}
+                        className="w-28 h-28 sm:w-36 sm:h-36 relative overflow-hidden rounded-2xl border-2 border-blue-100 cursor-pointer hover:border-blue-300 transition-colors duration-200"
+                        onClick={() => openGallery(allImagesIndex)}
                       >
                         <Image
                           src={image || "/placeholder.svg"}
-                          alt={`Rezeptbild ${index + 2}`}
+                          alt={isOriginal ? "Originalbild" : `Rezeptbild ${allImagesIndex + 1}`}
                           fill
                           className="object-cover"
                         />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center">
                           <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                         </div>
+                        {isOriginal && safeHeroIndex !== 0 && (
+                          <div className="absolute top-1.5 left-1.5 bg-gray-700/80 text-white rounded-lg px-2 py-0.5 text-[10px] font-bold">
+                            Original
+                          </div>
+                        )}
                       </div>
+                      {/* Set as cover button */}
+                      {canEditRecipe && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setHeroImageIndex(allImagesIndex)
+                            toast({
+                              title: "Titelbild geändert",
+                              description: "Das Bild wurde als Titelbild festgelegt.",
+                            })
+                          }}
+                          className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-2.5 py-1 text-[10px] font-bold transition-colors duration-200 whitespace-nowrap flex items-center gap-1 shadow-md"
+                        >
+                          <Crown className="h-3 w-3" />
+                          Als Titelbild
+                        </button>
+                      )}
                       {canEditRecipe && (
                         <button
                           onClick={(e) => {
@@ -1056,7 +1136,8 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                         </button>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -1066,15 +1147,15 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
 
       {/* Fallback Title (if no images) */}
       {allImages.length === 0 && (
-        <div className="text-center py-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance mb-4">{getRecipeTitle()}</h2>
+        <div className="bg-white rounded-[20px] p-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 text-balance mb-4 tracking-tight">{getRecipeTitle()}</h2>
           {(userId || createdAt) && (
-            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-50 to-green-50 border border-gray-200 rounded-full px-6 py-3 shadow-sm">
+            <div className="inline-flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-full px-6 py-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                   <ChefHat className="h-4 w-4 text-blue-600" />
                 </div>
-                <span className="text-sm font-medium text-gray-800">Von {userName}</span>
+                <span className="text-sm font-semibold text-gray-800">Von {userName}</span>
               </div>
               {createdAt && (
                 <>
@@ -1121,7 +1202,7 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
         if (isHeader) {
           return (
             <div key={index} className="relative">
-              <h3 className="text-2xl font-bold text-gray-900 pb-3 mb-6 border-b-2 border-gray-300">{section}</h3>
+              <h3 className="text-2xl font-extrabold text-gray-900 pb-3 mb-6 border-b-2 border-blue-100">{section}</h3>
             </div>
           )
         } else if (isIngredientList) {
@@ -1129,13 +1210,13 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
           let ingredientCounter = 1
 
           return (
-            <div key={index} className="bg-white p-6 rounded-lg border-2 border-gray-200 shadow-sm">
+            <div key={index} className="bg-white p-7 rounded-[20px] border border-transparent">
               {lines.map((line, lineIndex) => {
                 // Skip title lines like "Zutaten:"
                 if (line.toLowerCase().includes("zutaten:") || line.toLowerCase().includes("ingredients:")) {
                   return (
-                    <div key={lineIndex} className="mb-4">
-                      <h4 className="text-xl font-semibold text-gray-900">{line}</h4>
+                    <div key={lineIndex} className="mb-5">
+                      <h4 className="text-xl font-bold text-gray-800">{line}</h4>
                     </div>
                   )
                 }
@@ -1149,12 +1230,12 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                 return (
                   <div
                     key={lineIndex}
-                    className="flex items-start gap-3 py-3 hover:bg-gray-50 rounded-lg px-3 transition-colors duration-200"
+                    className="flex items-start gap-3 py-3 hover:bg-blue-50/40 rounded-xl px-3 transition-colors duration-200"
                   >
-                    <span className="text-white mt-1 flex-shrink-0 font-bold text-sm bg-blue-600 w-7 h-7 rounded-full flex items-center justify-center">
+                    <span className="text-white mt-0.5 flex-shrink-0 font-bold text-sm bg-blue-600 w-7 h-7 rounded-full flex items-center justify-center">
                       {currentNumber}
                     </span>
-                    <span className="text-gray-800 leading-relaxed">{line}</span>
+                    <span className="text-gray-700 leading-relaxed">{line}</span>
                   </div>
                 )
               })}
@@ -1166,13 +1247,13 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
           // Special formatting for manual recipe Zubereitung section
           if (isManual && section.trim().startsWith("Zubereitung:")) {
             return (
-              <div key={index} className="bg-white p-6 rounded-lg border-2 border-gray-200 shadow-sm">
+              <div key={index} className="bg-white p-7 rounded-[20px] border border-transparent">
                 {lines.map((line, lineIndex) => {
                   // Skip title line like "Zubereitung:"
                   if (line.toLowerCase().includes("zubereitung:")) {
                     return (
-                      <div key={lineIndex} className="mb-4">
-                        <h4 className="text-xl font-semibold text-gray-900">{line}</h4>
+                      <div key={lineIndex} className="mb-5">
+                        <h4 className="text-xl font-bold text-gray-800">{line}</h4>
                       </div>
                     )
                   }
@@ -1184,7 +1265,7 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                   return (
                     <div
                       key={lineIndex}
-                      className="py-2 text-gray-800 leading-relaxed text-lg"
+                      className="py-2 text-gray-700 leading-relaxed text-lg"
                     >
                       {line}
                     </div>
@@ -1196,37 +1277,37 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
 
           // Regular text sections (description, etc.)
           return (
-            <div key={index} className="bg-white p-6 rounded-lg border-2 border-gray-200 shadow-sm">
-              <p className="whitespace-pre-line text-gray-800 leading-relaxed text-lg">{section}</p>
+            <div key={index} className="bg-white p-7 rounded-[20px] border border-transparent">
+              <p className="whitespace-pre-line text-gray-700 leading-relaxed text-lg">{section}</p>
             </div>
           )
         }
       })}
 
-      {/* Recipe Action Buttons - Only show if user has permissions and not in analysis mode */}
+      {/* Recipe Action Buttons */}
       {canEditRecipe && isFromArchive ? (
-        <div className="mt-8 text-center">
-          <div className="flex gap-4 justify-center">
-            <Button
+        <div className="bg-white rounded-[20px] p-5 text-center">
+          <div className="flex gap-3 justify-center">
+            <button
               onClick={handleEditRecipe}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors"
             >
-              <Edit className="h-4 w-4 mr-2" />
+              <Edit className="h-4 w-4" />
               Rezept bearbeiten
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={handleDeleteRecipe}
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-colors"
             >
-              <Trash2 className="h-4 w-4 mr-2" />
+              <Trash2 className="h-4 w-4" />
               Rezept löschen
-            </Button>
+            </button>
           </div>
         </div>
       ) : (
         currentUserRole && userId && currentUserId !== userId && (
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500 italic">
+          <div className="bg-white rounded-[20px] p-5 text-center">
+            <p className="text-sm text-gray-500">
               {currentUserRole === 'guest'
                 ? 'Nur zum Anzeigen - Gäste können keine Rezepte bearbeiten'
                 : 'Sie können nur Ihre eigenen Rezepte bearbeiten'
@@ -1236,23 +1317,22 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
         )
       )}
 
-
       {/* Recipe Comments Section */}
-      <div className="mt-6">
+      <div className="mt-2">
         <RecipeComments recipeId={recipeId} isAnalysisMode={!isFromArchive} />
       </div>
 
       {/* Image Gallery Modal */}
       {showGalleryModal && allImages.length > 0 && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
           onClick={() => setShowGalleryModal(false)}
         >
-          <div className="relative max-w-5xl max-h-[95vh] w-full mx-4 bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+          <div className="relative max-w-5xl max-h-[95vh] w-full mx-4 bg-white rounded-[20px] overflow-hidden">
             {/* Close button */}
             <button
               onClick={() => setShowGalleryModal(false)}
-              className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white rounded-full p-3 z-10 transition-colors duration-200"
+              className="absolute top-4 right-4 w-10 h-10 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl flex items-center justify-center z-10 transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
@@ -1265,7 +1345,7 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                     e.stopPropagation()
                     prevImage()
                   }}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 z-10 transition-colors duration-200"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center z-10 transition-colors"
                 >
                   <ChevronLeft className="h-6 w-6" />
                 </button>
@@ -1274,18 +1354,40 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                     e.stopPropagation()
                     nextImage()
                   }}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 z-10 transition-colors duration-200"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center z-10 transition-colors"
                 >
                   <ChevronRight className="h-6 w-6" />
                 </button>
               </>
             )}
 
-            {/* Image counter */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-full text-sm">
-              <span className="font-semibold">{currentImageIndex + 1}</span>
-              <span className="mx-1 text-gray-300">/</span>
-              <span className="text-gray-200">{allImages.length}</span>
+            {/* Bottom bar: counter + set as cover */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-3 z-10">
+              <div className="bg-gray-900/80 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-semibold">
+                {currentImageIndex + 1} / {allImages.length}
+              </div>
+              {canEditRecipe && currentImageIndex !== safeHeroIndex && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setHeroImageIndex(currentImageIndex)
+                    toast({
+                      title: "Titelbild geändert",
+                      description: "Das Bild wurde als Titelbild festgelegt.",
+                    })
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors shadow-lg"
+                >
+                  <Crown className="h-4 w-4" />
+                  Als Titelbild
+                </button>
+              )}
+              {currentImageIndex === safeHeroIndex && (
+                <div className="bg-emerald-500/90 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
+                  <Crown className="h-4 w-4" />
+                  Titelbild
+                </div>
+              )}
             </div>
 
             {/* Main image */}
@@ -1293,13 +1395,13 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
               className="relative w-full h-full flex items-center justify-center p-8"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative max-w-full max-h-full bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+              <div className="relative max-w-full max-h-full overflow-hidden rounded-2xl">
                 <Image
                   src={allImages[currentImageIndex] || "/placeholder.svg"}
                   alt={`Imagen ${currentImageIndex + 1}`}
                   width={800}
                   height={600}
-                  className="max-w-full max-h-[75vh] object-contain rounded-lg"
+                  className="max-w-full max-h-[75vh] object-contain rounded-2xl"
                 />
               </div>
             </div>
@@ -1309,23 +1411,25 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
 
       {/* Edit Recipe Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg border-2 border-gray-200 w-full max-w-4xl max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-[20px] w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b-2 border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                <Edit className="h-5 w-5 text-blue-600" />
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Edit className="h-5 w-5 text-blue-600" />
+                </div>
                 Rezept bearbeiten
               </h3>
-              <button onClick={handleCancelEdit} className="text-gray-400 hover:text-gray-600 transition-colors">
-                <X className="h-6 w-6" />
+              <button onClick={handleCancelEdit} className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                <X className="h-5 w-5 text-gray-500" />
               </button>
             </div>
 
             {/* Modal Content */}
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
               <div className="space-y-4">
-                <Label htmlFor="recipe-content" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="recipe-content" className="text-sm font-semibold text-gray-700">
                   Rezeptinhalt
                 </Label>
                 <Textarea
@@ -1333,7 +1437,7 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                   value={editedRecipe}
                   onChange={(e) => setEditedRecipe(e.target.value)}
                   placeholder="Hier können Sie Ihr Rezept bearbeiten..."
-                  className="min-h-[400px] resize-none font-mono text-sm border-2 border-gray-300 focus:border-blue-500"
+                  className="min-h-[400px] resize-none font-mono text-sm border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20"
                 />
                 <p className="text-xs text-gray-500">
                   Tipp: Verwenden Sie leere Zeilen, um Abschnitte zu trennen. Die Formatierung wird automatisch
@@ -1343,20 +1447,19 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
             </div>
 
             {/* Modal Footer */}
-            <div className="flex items-center justify-end gap-3 p-6 border-t-2 border-gray-200">
-              <Button
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-100">
+              <button
                 onClick={handleCancelEdit}
-                variant="outline"
-                className="px-6 border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
+                className="px-6 py-2.5 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm hover:bg-gray-200 transition-colors"
               >
                 Abbrechen
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={handleSaveRecipe}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 transition-colors duration-200"
+                className="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors"
               >
                 Speichern
-              </Button>
+              </button>
             </div>
           </div>
         </div>

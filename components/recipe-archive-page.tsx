@@ -1354,41 +1354,39 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
   })
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50 overflow-x-hidden">
+      {/* Decorative background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+      </div>
+
       {/* Header */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                onClick={onBack}
-                variant="outline"
-                size="sm"
-                className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-50 bg-transparent"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-
-
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center">
-                  <BookOpen className="h-6 w-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-semibold text-gray-900">Rezept Archiv</h1>
-                  <p className="text-sm text-gray-600">Rezeptsammlung verwalten</p>
-                </div>
-              </div>
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onBack}
+              className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5 text-blue-600" />
+            </button>
+            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+            <div className="leading-none">
+              <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
+              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
             </div>
           </div>
         </div>
+        {/* Gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
       </div>
 
-      {/* Search Bar - Above everything */}
-      <div className="pt-20 bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
+      {/* Search Bar */}
+      <div className="relative pt-24 px-6">
+        <div className="max-w-7xl mx-auto mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-400 h-5 w-5" />
             <Input
               type="text"
               placeholder="Suche nach Rezepttitel oder Inhalt..."
@@ -1398,24 +1396,22 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                 setSearchQuery(newSearchQuery);
 
                 if (newSearchQuery.trim()) {
-                  // If searching, load all matching recipes
-                  setSelectedFolder(undefined); // Clear category selection
+                  setSelectedFolder(undefined);
                   loadCategoryOrSearchRecipes(undefined, newSearchQuery.trim());
                 } else {
-                  // If search cleared, reload paginated view
                   loadData(true);
                 }
               }}
-              className="w-full pl-10 pr-4 py-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500 bg-white"
+              className="w-full pl-12 pr-12 py-3 h-12 rounded-2xl border-blue-100/60 bg-white shadow-sm focus:border-blue-300 focus:ring-blue-200 text-[15px]"
             />
             {searchQuery && (
               <button
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedFolder(undefined);
-                  loadData(true); // Reset to paginated view
+                  loadData(true);
                 }}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -1425,21 +1421,23 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
       </div>
 
       {/* Main Content */}
-      <div className="pb-0">
-        <div className="container mx-auto">
-          <div className="flex flex-col xl:flex-row min-h-screen xl:min-h-[calc(100vh-6rem)]">
+      <div className="relative pb-0">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col xl:flex-row min-h-screen xl:min-h-[calc(100vh-6rem)] gap-6">
           {/* Sidebar - Categories */}
-          <div className="w-full xl:w-[28rem] xl:max-w-md bg-white border-r border-gray-200">
-            <div className="p-6">
+          <div className="w-full xl:w-[28rem] xl:max-w-md">
+            <div className="bg-white rounded-[20px] p-6 border border-blue-100/60 shadow-sm">
               <div className="space-y-4">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-medium text-gray-900 flex items-center gap-2">
-                  <Folder className="h-4 w-4 text-gray-600" />
+                <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
+                    <Folder className="h-4 w-4 text-blue-600" />
+                  </div>
                   Kategorien
                 </h3>
                 <button
                   onClick={() => setIsCategoriesCollapsed(!isCategoriesCollapsed)}
-                  className="p-1.5 text-blue-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                  className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 hover:text-blue-600 hover:bg-blue-100 transition-all duration-200"
                   title={isCategoriesCollapsed ? "Kategorien anzeigen" : "Kategorien verbergen"}
                 >
                   {isCategoriesCollapsed ? (
@@ -1458,22 +1456,24 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                   setSelectedFolder(undefined);
                   loadData(true); // Reset to paginated view
                 }}
-                className={`w-full text-left p-3 rounded-lg mb-2 transition-all duration-200 flex items-center gap-3 ${
+                className={`w-full text-left p-3 rounded-xl mb-2 transition-all duration-200 flex items-center gap-3 ${
                   selectedFolder === undefined
                     ? "bg-blue-50 text-blue-700 border border-blue-200"
-                    : "hover:bg-gray-50 text-gray-700 border border-transparent"
+                    : "hover:bg-blue-50/30 text-gray-700 border border-transparent"
                 }`}
               >
-                <ChefHat className="h-4 w-4" />
-                <span className="font-medium">Alle Rezepte</span>
-                <span className="ml-auto text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full font-medium">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <ChefHat className="h-3.5 w-3.5 text-blue-500" />
+                </div>
+                <span className="font-semibold">Alle Rezepte</span>
+                <span className="ml-auto text-xs bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full font-semibold">
                   {totalRecipesFromAPI || recipeCounts['all'] || allRecipes.length}
                 </span>
               </button>
 
 
               {/* Folders */}
-              <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-blue-50">
                 <AnimatePresence>
                   {getMainCategories().map((folder) => (
                     <motion.div
@@ -1527,10 +1527,10 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                               setSelectedFolder(folder.id);
                               loadCategoryOrSearchRecipes(folder.id);
                             }}
-                            className={`flex-1 text-left p-3 rounded-lg transition-all duration-200 flex items-center gap-3 group cursor-pointer border ${
+                            className={`flex-1 text-left p-3 rounded-xl transition-all duration-200 flex items-center gap-3 group cursor-pointer border ${
                               selectedFolder === folder.id
                                 ? "bg-blue-50 text-blue-700 border-blue-200"
-                                : "hover:bg-gray-50 text-gray-700 border-transparent hover:border-gray-200"
+                                : "hover:bg-blue-50/30 text-gray-700 border-transparent"
                             }`}
                           >
                             {/* Add Subcategory Button */}
@@ -1566,7 +1566,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
 
                             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: folder.color }} />
                             <span className="flex-1 truncate font-medium">{folder.name}</span>
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full font-medium">
+                            <span className="text-xs bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full font-semibold">
                               {recipeCounts[folder.id] || 0}
                             </span>
 
@@ -1655,10 +1655,10 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                                 </div>
                               ) : (
                                 <div
-                                  className={`w-full text-left p-2 rounded-lg transition-all duration-200 flex items-center gap-3 group cursor-pointer border ${
+                                  className={`w-full text-left p-2 rounded-xl transition-all duration-200 flex items-center gap-3 group cursor-pointer border ${
                                     selectedFolder === subcategory.id
                                       ? "bg-blue-50 text-blue-700 border-blue-200"
-                                      : "hover:bg-gray-50 text-gray-700 border-transparent hover:border-gray-200"
+                                      : "hover:bg-blue-50/30 text-gray-700 border-transparent"
                                   }`}
                                   onClick={() => {
                                     setSelectedFolder(subcategory.id);
@@ -1670,7 +1670,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                                     style={{ backgroundColor: subcategory.color }}
                                   />
                                   <span className="flex-1 truncate text-sm font-medium">{subcategory.name}</span>
-                                  <span className="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full font-medium">
+                                  <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-semibold">
                                     {recipeCounts[subcategory.id] || 0}
                                   </span>
 
@@ -1714,7 +1714,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
 
                   {/* Create new folder */}
                   {isCreatingFolder ? (
-                <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 mt-3">
+                <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100/60 mt-3">
                   {creatingSubcategoryFor && (
                     <div className="text-xs text-gray-500 mb-2">
                       Subcategory for: {folders.find((f) => f.id === creatingSubcategoryFor)?.name}
@@ -1754,14 +1754,13 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                   </div>
                 </div>
               ) : userRole === 'admin' ? (
-                <Button
+                <button
                   onClick={() => setIsCreatingFolder(true)}
-                  variant="outline"
-                  className="w-full mt-3 border-dashed border-gray-300 hover:bg-gray-50 text-gray-600"
+                  className="w-full mt-3 h-10 rounded-xl border-2 border-dashed border-blue-200 hover:border-blue-300 hover:bg-blue-50/30 text-blue-500 font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-200"
                 >
-                  <FolderPlus className="h-4 w-4 mr-2" />
+                  <FolderPlus className="h-4 w-4" />
                   Neue Kategorie
-                </Button>
+                </button>
               ) : null}
                 </>
               )}
@@ -1771,7 +1770,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
 
           {/* Main Content - Recipes Grid */}
           <div className="flex-1 xl:min-h-screen">
-            <div className="container mx-auto px-4 sm:px-6 xl:px-8 pb-0 mt-4">
+            <div className="pb-0">
 
             {/* Filters and Section Header */}
             <div className="mb-6">
@@ -1783,10 +1782,10 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                     <select
                       value={selectedUserId || ""}
                       onChange={(e) => setSelectedUserId(e.target.value || undefined)}
-                      className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer appearance-none ${
+                      className={`w-full pl-10 pr-10 py-2.5 border rounded-xl focus:border-blue-300 focus:ring-2 focus:ring-blue-100 text-sm font-semibold shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer appearance-none ${
                         selectedUserId
-                          ? "border-blue-300 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700"
-                          : "border-gray-300 bg-gradient-to-r from-white to-gray-50 text-gray-700"
+                          ? "border-blue-200 bg-blue-50 text-blue-700"
+                          : "border-blue-100/60 bg-white text-gray-700"
                       }`}
                     >
                       <option value="">Alle Benutzer</option>
@@ -1880,13 +1879,13 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                 )}
 
                 {/* View Toggle */}
-                <div className="flex border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                <div className="flex border border-blue-100/60 rounded-xl overflow-hidden shadow-sm">
                   <button
                     onClick={() => handleViewModeChange('cards')}
-                    className={`px-3 py-2 text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+                    className={`px-3 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
                       viewMode === 'cards'
-                        ? 'bg-blue-500 text-white shadow-sm'
-                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'bg-white text-gray-600 hover:bg-blue-50/30'
                     }`}
                     title="Kartenansicht"
                   >
@@ -1895,10 +1894,10 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                   </button>
                   <button
                     onClick={() => handleViewModeChange('list')}
-                    className={`px-3 py-2 text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+                    className={`px-3 py-2.5 text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
                       viewMode === 'list'
-                        ? 'bg-blue-500 text-white shadow-sm'
-                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'bg-white text-gray-600 hover:bg-blue-50/30'
                     }`}
                     title="Listenansicht"
                   >
@@ -1910,14 +1909,14 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
 
               {/* Section Header */}
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-bold text-gray-800">
                   {selectedFolder === "favorites"
                     ? "Favoriten"
                     : selectedFolder
                       ? folders.find((f) => f.id === selectedFolder)?.name
                       : "Alle Rezepte"}
                 </h3>
-                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-medium">
+                <span className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full font-semibold">
                   {(() => {
                     if (searchQuery) {
                       // If searching, show search results count
@@ -1954,10 +1953,10 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                     transition={{ duration: 0.2 }}
                   >
                     <Card
-                      className={`cursor-pointer hover:shadow-md transition-all duration-200 bg-white group overflow-hidden ${
+                      className={`cursor-pointer hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-[250ms] bg-white group overflow-hidden rounded-[20px] ${
                         viewMode === 'list'
-                          ? 'flex flex-row border-l-4 border-l-blue-200 border border-gray-200 hover:border-l-blue-400 shadow-sm'
-                          : 'border border-gray-200'
+                          ? 'flex flex-row border-l-4 border-l-blue-200 border border-blue-100/60 hover:border-l-blue-400'
+                          : 'border border-blue-100/60'
                       }`}
                       onClick={() => onSelectRecipe(item)}
                     >
@@ -2087,7 +2086,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                 <Button
                   onClick={loadMoreRecipes}
                   disabled={isLoadingMore}
-                  className="bg-blue-600 hover:bg-blue-700 px-6 py-2 font-medium"
+                  className="bg-blue-600 hover:bg-blue-700 px-8 py-2.5 font-semibold rounded-xl shadow-[0_4px_16px_rgba(37,99,235,0.25)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.35)] transition-all duration-200"
                 >
                   {isLoadingMore ? (
                     <>
@@ -2103,19 +2102,19 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
 
             {isInitialLoading ? (
               <div className="text-center py-16">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-                  <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+                <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto">
+                  <Loader2 className="h-8 w-8 text-blue-400 animate-spin" />
                 </div>
               </div>
             ) : finalFilteredHistory.length === 0 && (
               <div className="text-center py-16">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  {searchQuery ? <Search className="h-8 w-8 text-gray-400" /> : <ChefHat className="h-8 w-8 text-gray-400" />}
+                <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  {searchQuery ? <Search className="h-8 w-8 text-blue-400" /> : <ChefHat className="h-8 w-8 text-blue-400" />}
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <h3 className="text-lg font-bold text-gray-800 mb-2">
                   {searchQuery ? "Keine Rezepte gefunden" : "Keine Rezepte gefunden"}
                 </h3>
-                <p className="text-gray-500 max-w-sm mx-auto">
+                <p className="text-[15px] text-gray-500 max-w-sm mx-auto leading-relaxed">
                   {searchQuery
                     ? `Keine Rezepte für "${searchQuery}" gefunden. Versuchen Sie einen anderen Suchbegriff.`
                     : selectedFolder === "favorites"
@@ -2132,7 +2131,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
 
       {/* Delete Confirmation Modal */}
       <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white rounded-[20px] border border-blue-100/60">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Trash2 className="h-5 w-5 text-red-600" />
@@ -2197,7 +2196,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
 
       {/* Delete Category Confirmation Modal */}
       <Dialog open={deleteCategoryModalOpen} onOpenChange={setDeleteCategoryModalOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white rounded-[20px] border border-blue-100/60">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Trash2 className="h-5 w-5 text-red-600" />

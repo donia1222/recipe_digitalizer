@@ -423,153 +423,164 @@ const RecipeLibrary: React.FC<RecipeLibraryProps> = ({ onSelectItem, onCreateNew
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-slate-800 dark:to-gray-900">
-      {/* Header fijo - Con icono, título y subtítulo */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {onBackToHome && (
-                <Button
-                  onClick={onBackToHome}
-                  variant="outline"
-                  size="sm"
-                  className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-50 bg-transparent"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              )}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                  <Camera className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-semibold text-gray-900">Rezepte Digitalisieren</h1>
-                  <p className="text-sm text-gray-600">Foto aufnehmen oder hochladen</p>
-                </div>
-              </div>
+    <div className="min-h-screen bg-blue-50 overflow-x-hidden">
+      {/* Decorative background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+      </div>
+
+      {/* Header */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {onBackToHome && (
+              <button
+                onClick={onBackToHome}
+                className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 text-blue-600" />
+              </button>
+            )}
+            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+            <div className="leading-none">
+              <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
+              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
             </div>
           </div>
         </div>
+        {/* Gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
       </div>
 
+      {/* Content */}
+      <div className="relative max-w-4xl mx-auto px-6 pt-24 pb-12">
+        {/* Section title */}
+        <div className="mb-8 mt-2">
+          <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight mb-1">Rezepte Digitalisieren</h2>
+          <p className="text-[15px] text-gray-500">Foto aufnehmen oder hochladen</p>
+        </div>
 
-      {/* Contenido principal - 3 botones uno debajo del otro */}
-      <div className="container mx-auto px-4 sm:px-6 py-8 max-w-4xl">
-        <div className="space-y-6">
+        <div className="space-y-5">
 
-          {/* Botón Foto */}
+          {/* Foto machen */}
           <div
             onClick={handleTakePhoto}
-            className="group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer rounded-2xl overflow-hidden mt-20"
+            className="group bg-white rounded-[20px] p-7 sm:p-10 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer"
           >
-            <div className="p-8 sm:p-12">
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center shadow-sm group-hover:bg-blue-700 transition-colors duration-200">
-                    <Camera className="h-8 w-8 text-white" />
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Camera className="h-7 w-7 text-white" />
+                </div>
+              </div>
+
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Foto machen</h3>
+                <p className="text-[15px] text-gray-500 leading-relaxed mb-4">
+                  Machen Sie ein Foto Ihres Rezepts direkt mit der Kamera Ihres Geräts
+                </p>
+                <div className="flex items-center justify-center sm:justify-start gap-5 text-sm text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Camera className="h-3 w-3 text-blue-500" />
+                    </div>
+                    <span>Direkte Aufnahme</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Scan className="h-3 w-3 text-blue-500" />
+                    </div>
+                    <span>Optimiert für Dokumente</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Foto machen</h3>
-                  <p className="text-lg text-gray-600 mb-6">
-                    Machen Sie ein Foto Ihres Rezepts direkt mit der Kamera Ihres Geräts
-                  </p>
-                  <div className="flex items-center justify-center sm:justify-start gap-6 text-sm text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <Camera className="h-4 w-4" />
-                      <span>Direkte Aufnahme</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Scan className="h-4 w-4" />
-                      <span>Optimiert für Dokumente</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex-shrink-0">
-                  <div className="h-6 w-6 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all duration-200">
-                    →
-                  </div>
+              <div className="flex-shrink-0 hidden sm:block">
+                <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                  <ChevronRight className="h-5 w-5 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Botón Upload */}
+          {/* Bild hochladen */}
           <div
             onClick={triggerFileInput}
-            className="group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer rounded-2xl overflow-hidden"
+            className="group bg-white rounded-[20px] p-7 sm:p-10 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer"
           >
-            <div className="p-8 sm:p-12">
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-emerald-600 rounded-xl flex items-center justify-center shadow-sm group-hover:bg-emerald-700 transition-colors duration-200">
-                    <Upload className="h-8 w-8 text-white" />
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Upload className="h-7 w-7 text-white" />
+                </div>
+              </div>
+
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Bild hochladen</h3>
+                <p className="text-[15px] text-gray-500 leading-relaxed mb-4">
+                  Wählen Sie ein bereits gespeichertes Bild aus Ihrer Galerie oder Ihrem Computer aus
+                </p>
+                <div className="flex items-center justify-center sm:justify-start gap-5 text-sm text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Upload className="h-3 w-3 text-blue-500" />
+                    </div>
+                    <span>Aus Galerie</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                      <ChefHat className="h-3 w-3 text-blue-500" />
+                    </div>
+                    <span>Alle Formate</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Bild hochladen</h3>
-                  <p className="text-lg text-gray-600 mb-6">
-                    Wählen Sie ein bereits gespeichertes Bild aus Ihrer Galerie oder Ihrem Computer aus
-                  </p>
-                  <div className="flex items-center justify-center sm:justify-start gap-6 text-sm text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <Upload className="h-4 w-4" />
-                      <span>Aus Galerie</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <ChefHat className="h-4 w-4" />
-                      <span>Alle Formate</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex-shrink-0">
-                  <div className="h-6 w-6 text-gray-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all duration-200">
-                    →
-                  </div>
+              <div className="flex-shrink-0 hidden sm:block">
+                <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                  <ChevronRight className="h-5 w-5 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Botón Scanner */}
+          {/* Dokument scannen */}
           <div
             onClick={handleScanDocument}
-            className="group bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer rounded-2xl overflow-hidden"
+            className="group bg-white rounded-[20px] p-7 sm:p-10 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer"
           >
-            <div className="p-8 sm:p-12">
-              <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center shadow-sm group-hover:bg-purple-700 transition-colors duration-200">
-                    <Scan className="h-8 w-8 text-white" />
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Scan className="h-7 w-7 text-white" />
+                </div>
+              </div>
+
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Dokument scannen</h3>
+                <p className="text-[15px] text-gray-500 leading-relaxed mb-4">
+                  Verwenden Sie die Scanner-Funktion für beste Qualität bei Rezeptbüchern und Dokumenten
+                </p>
+                <div className="flex items-center justify-center sm:justify-start gap-5 text-sm text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Scan className="h-3 w-3 text-blue-500" />
+                    </div>
+                    <span>Dokumenten-Scanner</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                      <BookOpen className="h-3 w-3 text-blue-500" />
+                    </div>
+                    <span>Für Rezeptbücher</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Dokument scannen</h3>
-                  <p className="text-lg text-gray-600 mb-6">
-                    Verwenden Sie die Scanner-Funktion für beste Qualität bei Rezeptbüchern und Dokumenten
-                  </p>
-                  <div className="flex items-center justify-center sm:justify-start gap-6 text-sm text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <Scan className="h-4 w-4" />
-                      <span>Dokumenten-Scanner</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4" />
-                      <span>Für Rezeptbücher</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex-shrink-0">
-                  <div className="h-6 w-6 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all duration-200">
-                    →
-                  </div>
+              <div className="flex-shrink-0 hidden sm:block">
+                <div className="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                  <ChevronRight className="h-5 w-5 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
                 </div>
               </div>
             </div>
@@ -588,24 +599,24 @@ const RecipeLibrary: React.FC<RecipeLibraryProps> = ({ onSelectItem, onCreateNew
       />
 
       {/* Modal de confirmación */}
-      <Dialog open={showConfirmModal} onOpenChange={(open) => {
-        if (!isAnalyzing) {
-          setShowConfirmModal(open)
-          if (!open) {
-            setSelectedImageData(null)
-          }
-        }
-      }}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <ChefHat className="h-5 w-5 text-slate-600" />
-              {isAnalyzing ? 'Rezept wird analysiert...' : 'Rezept analysieren?'}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
+      <Dialog open={showConfirmModal} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md bg-white rounded-[20px] border border-blue-100/60 p-0 overflow-hidden [&>button:last-child]:hidden" onPointerDownOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
+          {/* Header */}
+          <div className="px-6 pt-6 pb-4">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-3 text-lg font-bold text-gray-900">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <ChefHat className="h-5 w-5 text-blue-600" />
+                </div>
+                {isAnalyzing ? 'Rezept wird analysiert...' : 'Rezept analysieren?'}
+              </DialogTitle>
+            </DialogHeader>
+          </div>
+
+          <div className="px-6 pb-6 space-y-5">
+            {/* Image preview */}
             {selectedImageData && (
-              <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden">
+              <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden border border-blue-100/60">
                 <Image
                   src={selectedImageData}
                   alt="Ausgewähltes Bild"
@@ -613,10 +624,10 @@ const RecipeLibrary: React.FC<RecipeLibraryProps> = ({ onSelectItem, onCreateNew
                   className="object-cover"
                 />
                 {isAnalyzing && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                    <div className="bg-white rounded-lg p-4 text-center">
+                  <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center">
+                    <div className="bg-white rounded-2xl p-5 text-center shadow-lg">
                       <RefreshCw className="h-8 w-8 text-blue-600 animate-spin mx-auto mb-2" />
-                      <p className="text-sm text-blue-600 font-medium">Analysiere...</p>
+                      <p className="text-sm text-blue-600 font-semibold">Analysiere...</p>
                     </div>
                   </div>
                 )}
@@ -625,18 +636,21 @@ const RecipeLibrary: React.FC<RecipeLibraryProps> = ({ onSelectItem, onCreateNew
 
             {isAnalyzing ? (
               <div className="space-y-3">
-                <Progress value={analysisProgress} className="w-full [&>div]:bg-blue-600" />
-                <p className="text-sm text-blue-600 dark:text-blue-400 text-center font-medium">
-                  <span className="text-lg font-bold">{Math.round(analysisProgress)}%</span> - Bitte warten Sie, während das Rezept analysiert wird...
+                <Progress value={analysisProgress} className="w-full h-2.5 rounded-full bg-blue-50 [&>div]:bg-blue-600 [&>div]:rounded-full" />
+                <p className="text-sm text-blue-600 text-center font-semibold">
+                  <span className="text-xl font-extrabold">{Math.round(analysisProgress)}%</span>
+                  <span className="text-gray-500 font-normal ml-2">Bitte warten...</span>
                 </p>
               </div>
             ) : (
               <>
-                {/* Input de porciones */}
-                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                {/* Servings input */}
+                <div className="bg-blue-50 rounded-2xl p-5 border border-blue-100/60">
                   <div className="flex items-center justify-center gap-3">
-                    <Users className="h-5 w-5 text-blue-600" />
-                    <label className="text-sm font-medium text-gray-700">
+                    <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                      <Users className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <label className="text-sm font-semibold text-gray-700">
                       Für wie viele Personen?
                     </label>
                     <Input
@@ -650,32 +664,33 @@ const RecipeLibrary: React.FC<RecipeLibraryProps> = ({ onSelectItem, onCreateNew
                       }}
                       min="1"
                       max="100"
-                      className="w-16 h-8 text-center border-gray-300 focus:border-blue-500"
+                      className="w-16 h-9 text-center rounded-xl border-blue-200 bg-white focus:border-blue-500 font-bold text-gray-900"
                     />
-                    <span className="text-sm text-gray-600">Personen</span>
+                    <span className="text-sm text-gray-500 font-medium">Personen</span>
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                <p className="text-[15px] text-gray-500 text-center leading-relaxed">
                   Möchten Sie dieses Bild analysieren und das Rezept digitalisieren?
                 </p>
-                <div className="flex gap-3 justify-center">
-                  <Button
+
+                {/* Action buttons */}
+                <div className="flex gap-3">
+                  <button
                     onClick={() => {
                       setShowConfirmModal(false)
                       setSelectedImageData(null)
                     }}
-                    variant="outline"
-                    className="flex-1"
+                    className="flex-1 h-12 rounded-xl bg-gray-100 text-gray-700 font-semibold text-[15px] hover:bg-gray-200 transition-colors"
                   >
                     Abbrechen
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={confirmAnalysis}
-                    className="flex-1 bg-gradient-to-r from-slate-500 to-blue-600 hover:from-slate-600 hover:to-blue-700 text-white"
+                    className="flex-1 h-12 rounded-xl bg-blue-600 text-white font-semibold text-[15px] hover:bg-blue-700 transition-colors shadow-[0_4px_16px_rgba(37,99,235,0.25)]"
                   >
                     Analysieren
-                  </Button>
+                  </button>
                 </div>
               </>
             )}
