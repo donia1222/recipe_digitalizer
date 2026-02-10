@@ -149,8 +149,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
           <div className="flex items-center gap-2.5">
             <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
             <div className="leading-none">
-              <span className="text-base sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezept</span>
-              <span className="text-base sm:text-xl font-extrabold text-blue-600 tracking-tight">App</span>
+              <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezept</span>
+              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight">App</span>
             </div>
           </div>
 
