@@ -167,8 +167,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-lg text-gray-500 leading-relaxed mb-8"
               >
-                Die intelligente Plattform zur Digitalisierung, Verwaltung und gemeinsamen Nutzung von Rezepten.
-                Speziell entwickelt für das Pflege- und Betreuungszentrum Büelriet.
+                Handgeschriebene Rezepte in Sekunden digitalisieren, verwalten und mit dem ganzen Team teilen — powered by künstlicher Intelligenz.
               </motion.p>
 
               <motion.div

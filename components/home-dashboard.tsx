@@ -160,7 +160,7 @@ export default function HomeDashboard({
                 </div>
                 <div>
                 <h1 className="text-lg font-semibold text-gray-900">Rezept Archiv</h1>
-                  <p className="text-sm text-gray-600">Pflege- und Betreuungszentrum Büelriet</p>
+                  <p className="text-sm text-gray-600">Digitale Rezeptsammlung mit KI</p>
                 </div>
               </div>
             </div>
