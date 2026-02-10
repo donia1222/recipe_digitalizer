@@ -399,7 +399,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 {[
                   "KI-gestützte Rezepterkennung in Sekunden",
                   "Offline-fähig als installierbare App",
-                  "Rollenbasiertes Zugangssystem"
+                  "Rollenbasiertes Zugangssystem",
+                  "Ideal für Gastronomie & Betriebe"
                 ].map((text, i) => (
                   <div key={i} className="flex items-center gap-3 text-gray-600 text-[15px]">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-400 flex items-center justify-center">
