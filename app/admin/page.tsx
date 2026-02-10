@@ -10,6 +10,7 @@ export default function AdminPage() {
   const router = useRouter()
   
 
+  
   useEffect(() => {
     // Check authentication and role
     const savedAuth = localStorage.getItem("recipe-auth")
