@@ -127,9 +127,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
       {/* ===== HERO SECTION ===== */}
       <section className="relative overflow-hidden">
         {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-sky-50" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-100/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-50 via-blue-50/60 to-white" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-200/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/30 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-indigo-100/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
 
         <div className="relative max-w-7xl mx-auto px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -149,11 +150,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-5xl sm:text-6xl lg:text-[66px] font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6"
+                className="text-3xl sm:text-5xl lg:text-[58px] font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6"
               >
-                <span className="inline-flex items-center gap-3">
+                <span className="inline-flex items-center gap-2 sm:gap-3">
                   Digitale
-                  <ChefHat className="inline h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 text-blue-600" />
+                  <ChefHat className="inline h-8 w-8 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-blue-600" />
                 </span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
