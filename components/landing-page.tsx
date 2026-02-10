@@ -781,12 +781,20 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 </div>
 
                 <div className="text-center mb-8">
-                  <p className="text-5xl sm:text-[52px] font-extrabold text-gray-900 tracking-tight">
+                  {/* Launch offer badge */}
+                  <div className="inline-flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-full px-3 py-1 mb-4">
+                    <Sparkles className="h-3.5 w-3.5 text-red-500" />
+                    <span className="text-xs font-bold text-red-600">Lancierungsangebot — nur bis Ende Februar!</span>
+                  </div>
+                  <p className="text-2xl font-bold text-gray-400 line-through mb-1">
                     CHF 6&apos;500
                   </p>
-                  <div className="inline-flex items-center gap-1.5 mt-3 bg-blue-50 border border-blue-100 rounded-full px-3 py-1">
-                    <Zap className="h-3.5 w-3.5 text-blue-500" />
-                    <span className="text-xs font-semibold text-blue-600">Stundensatz: CHF 87/h</span>
+                  <p className="text-5xl sm:text-[52px] font-extrabold text-gray-900 tracking-tight">
+                    CHF 5&apos;500
+                  </p>
+                  <div className="inline-flex items-center gap-2 mt-3">
+                    <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">−15%</span>
+                    <span className="text-xs font-semibold text-gray-400">Sie sparen CHF 1&apos;000</span>
                   </div>
                 </div>
 
@@ -927,11 +935,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-14 text-center"
           >
-            <div className="inline-flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-full px-6 py-3 shadow-sm">
-              <CheckCircle className="h-5 w-5 text-emerald-500" />
-              <span className="text-[15px] font-semibold text-emerald-700">
-                Sie sparen bis zu CHF 12&apos;000 mit Lweb Schweiz
-              </span>
+            <div className="inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+              <div className="inline-flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-full px-6 py-3 shadow-sm">
+                <CheckCircle className="h-5 w-5 text-emerald-500" />
+                <span className="text-[15px] font-semibold text-emerald-700">
+                  Sie sparen bis zu CHF 12&apos;000 mit Lweb Schweiz
+                </span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 rounded-full px-4 py-3 shadow-sm">
+                <Zap className="h-4 w-4 text-blue-500" />
+                <span className="text-[15px] font-semibold text-blue-600">Stundensatz: CHF 87/h</span>
+              </div>
             </div>
           </motion.div>
 
