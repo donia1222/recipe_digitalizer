@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -44,9 +45,14 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  metadataBase: new URL('https://rezeptsammlung.net'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
     locale: 'de_CH',
+    url: 'https://rezeptsammlung.net',
     siteName: 'RezeptApp',
     title: 'RezeptApp – Digitale Rezeptsammlung mit KI',
     description: 'Handgeschriebene Rezepte in Sekunden digitalisieren, verwalten und teilen. KI-gestützte Rezepterkennung und intelligente Portionsberechnung.',
@@ -96,6 +102,7 @@ export default function RootLayout({
       </head>
       <body className="overflow-x-hidden">
         {children}
+        <Analytics />
         <script
           dangerouslySetInnerHTML={{
             __html: `
