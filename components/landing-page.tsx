@@ -57,20 +57,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
     { label: "FAQ", href: "#faq", icon: HelpCircle },
   ]
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
-  }
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.08
-      }
-    }
-  }
-
   const features = [
     {
       icon: Brain,
@@ -467,17 +453,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
             </p>
           </motion.div>
 
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {features.map((feature, index) => (
-              <motion.div
+              <div
                 key={index}
-                variants={fadeInUp}
                 className="group bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 transition-all duration-250 cursor-default hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)]"
               >
                 <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-250">
@@ -489,9 +468,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 <p className="text-[15px] text-gray-500 leading-relaxed">
                   {feature.description}
                 </p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -515,12 +494,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="relative px-6 py-8"
               >
                 <span className="text-[64px] font-extrabold text-blue-50 leading-none block mb-4">
@@ -531,7 +506,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 </div>
                 <h4 className="text-lg font-bold text-gray-800 mb-3">{step.title}</h4>
                 <p className="text-[15px] text-gray-500 leading-relaxed">{step.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -576,12 +551,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 description: "Passen Sie Rezepte automatisch an beliebige Portionsgrössen an - die KI berechnet alle Zutaten neu."
               }
             ].map((card, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-white rounded-[20px] overflow-hidden border border-blue-100/60 hover:-translate-y-1.5 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-300"
               >
                 <div className="aspect-[3/2] overflow-hidden">
@@ -594,7 +565,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                   <h3 className="text-xl font-bold text-gray-800 mb-3">{card.title}</h3>
                   <p className="text-[15px] text-gray-500 leading-relaxed">{card.description}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -620,12 +591,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {roles.map((role, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-white rounded-[20px] border border-gray-200 p-8 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-250"
               >
                 <div className="flex items-center gap-4 mb-6">
@@ -650,7 +617,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -666,16 +633,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
               { number: "3", label: "Benutzerrollen" },
               { number: "24/7", label: "Offline verfügbar" }
             ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-              >
+              <div key={index}>
                 <p className="text-5xl sm:text-[56px] font-extrabold leading-none mb-2">{stat.number}</p>
                 <p className="text-base font-medium text-blue-100">{stat.label}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -717,12 +678,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 description: "Dank intelligenter Cache-Strategie laden Seiten sofort. Optimiert für mobile Geräte und Desktop."
               }
             ].map((pwa, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-white rounded-[20px] p-10 text-center hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-250"
               >
                 <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-6">
@@ -730,7 +687,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 </div>
                 <h4 className="text-xl font-bold text-gray-800 mb-3">{pwa.title}</h4>
                 <p className="text-[15px] text-gray-500 leading-relaxed">{pwa.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
