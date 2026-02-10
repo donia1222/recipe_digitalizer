@@ -9,9 +9,9 @@ export default function AGBPage() {
         <div className="max-w-3xl mx-auto px-6 h-14 flex items-center gap-4">
           <Link
             href="/"
-            className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors flex-shrink-0"
+            className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center hover:bg-gray-200 transition-colors flex-shrink-0"
           >
-            <ArrowLeft className="h-5 w-5 text-gray-700" />
+            <ArrowLeft className="h-5 w-5 text-gray-100" />
           </Link>
           <h1 className="text-lg font-bold text-gray-900 truncate">Allgemeine Geschäftsbedingungen</h1>
         </div>
