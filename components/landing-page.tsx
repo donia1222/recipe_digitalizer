@@ -287,13 +287,44 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
               <h1 className="text-4xl sm:text-5xl lg:text-[58px] font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
                 <span className="inline-flex items-center gap-2 sm:gap-3">
                   Digitale
-                  <motion.span
-                    animate={{ rotate: [0, -10, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-                    className="inline-block"
-                  >
-                    <ChefHat className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-blue-600" />
-                  </motion.span>
+                  <span className="relative inline-block">
+                    <motion.span
+                      animate={{ rotate: [0, -10, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                      className="inline-block"
+                    >
+                      <ChefHat className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-blue-600" />
+                    </motion.span>
+                    {/* Sparkles around chef hat - constant */}
+                    <motion.span
+                      animate={{ scale: [0.6, 1.2, 0.6], opacity: [0.4, 1, 0.4], rotate: [0, 180, 360] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0 }}
+                      className="absolute -top-2 -right-2 text-yellow-400 text-sm"
+                    >
+                      ✦
+                    </motion.span>
+                    <motion.span
+                      animate={{ scale: [0.6, 1.2, 0.6], opacity: [0.4, 1, 0.4], rotate: [0, -180, -360] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                      className="absolute -top-1 -left-3 text-blue-400 text-xs"
+                    >
+                      ✦
+                    </motion.span>
+                    <motion.span
+                      animate={{ scale: [0.6, 1.2, 0.6], opacity: [0.4, 1, 0.4], rotate: [0, 180, 360] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+                      className="absolute -bottom-1 -right-3 text-cyan-400 text-xs"
+                    >
+                      ✦
+                    </motion.span>
+                    <motion.span
+                      animate={{ scale: [0.5, 1, 0.5], opacity: [0.3, 1, 0.3], rotate: [0, -180, -360] }}
+                      transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+                      className="absolute top-1/2 -right-4 text-yellow-300 text-[10px]"
+                    >
+                      ✦
+                    </motion.span>
+                  </span>
                 </span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
