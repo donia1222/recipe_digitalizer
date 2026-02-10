@@ -147,12 +147,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
-              <ChefHat className="h-5 w-5 text-white" />
-            </div>
-            <div className="leading-none">
-              <span className="text-lg font-extrabold text-gray-900 tracking-tight">Rezept</span>
-              <span className="text-lg font-extrabold text-blue-600 tracking-tight">App</span>
+            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+            <div className="leading-none hidden sm:block">
+              <span className="text-xl font-extrabold text-gray-900 tracking-tight">Rezept</span>
+              <span className="text-xl font-extrabold text-blue-600 tracking-tight">App</span>
             </div>
           </div>
 

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import LoginPage from "@/components/login-page"
 import LandingPage from "@/components/landing-page"
 import RecipeDigitizer from "@/recipe-digitizer"
+import PwaInstallModal from "@/components/pwa-install-modal"
 
 export default function AppWrapper() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -99,11 +100,21 @@ export default function AppWrapper() {
 
   // Show landing page if user hasn't seen it yet
   if (showLandingPage) {
-    return <LandingPage onAccessApp={handleAccessApp} />
+    return (
+      <>
+        <PwaInstallModal />
+        <LandingPage onAccessApp={handleAccessApp} />
+      </>
+    )
   }
 
   if (!isAuthenticated) {
-    return <LoginPage onLogin={handleLogin} onBackToLanding={handleBackToLanding} />
+    return (
+      <>
+        <PwaInstallModal />
+        <LoginPage onLogin={handleLogin} onBackToLanding={handleBackToLanding} />
+      </>
+    )
   }
 
   return <RecipeDigitizer handleLogout={handleLogout} userRole={userRole} onBackToLanding={handleBackToLanding} />
