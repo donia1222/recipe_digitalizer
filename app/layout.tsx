@@ -2,16 +2,78 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Digitale Rezeptsammlung',
-  description: 'Pflege- und Betreuungszentrum Büelriet',
-  generator: 'v0.dev',
+  title: {
+    default: 'RezeptApp – Digitale Rezeptsammlung mit KI',
+    template: '%s | RezeptApp',
+  },
+  description: 'Handgeschriebene Rezepte in Sekunden digitalisieren, verwalten und teilen. KI-gestützte Rezepterkennung, intelligente Portionsberechnung und rollenbasierte Zusammenarbeit. PWA für iOS & Android.',
+  keywords: [
+    'Rezepte digitalisieren',
+    'Rezept App',
+    'KI Rezepterkennung',
+    'Rezeptverwaltung',
+    'digitale Rezeptsammlung',
+    'Kochrezepte App',
+    'Rezepte scannen',
+    'PWA Rezepte',
+    'Portionsrechner',
+    'Gastronomie Software',
+    'Küche digitalisieren',
+    'Rezeptbuch digital',
+    'handgeschriebene Rezepte',
+    'GPT Rezepte',
+    'Schweiz Gastronomie',
+  ],
+  authors: [{ name: 'Lweb Schweiz', url: 'https://www.lweb.ch' }],
+  creator: 'Lweb Schweiz',
+  publisher: 'Lweb Schweiz',
+  generator: 'Next.js',
+  applicationName: 'RezeptApp',
+  category: 'food',
   viewport: 'width=device-width, initial-scale=1',
   manifest: '/manifest.json',
   themeColor: '#ffffff',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'de_CH',
+    siteName: 'RezeptApp',
+    title: 'RezeptApp – Digitale Rezeptsammlung mit KI',
+    description: 'Handgeschriebene Rezepte in Sekunden digitalisieren, verwalten und teilen. KI-gestützte Rezepterkennung und intelligente Portionsberechnung.',
+    images: [
+      {
+        url: '/icon-512x512.png',
+        width: 512,
+        height: 512,
+        alt: 'RezeptApp Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RezeptApp – Digitale Rezeptsammlung mit KI',
+    description: 'Handgeschriebene Rezepte in Sekunden digitalisieren, verwalten und teilen. Powered by GPT.',
+    images: ['/icon-512x512.png'],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Recipe Digitizer',
+    title: 'RezeptApp',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'msapplication-TileColor': '#2563EB',
+    'msapplication-TileImage': '/icon-144x144.png',
   },
 }
 
