@@ -122,7 +122,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
   ]
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden" style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
+    <div className="min-h-screen bg-blue-50 overflow-x-hidden" style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative overflow-hidden">

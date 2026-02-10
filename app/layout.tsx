@@ -30,7 +30,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="theme-color" content="#3B82F6" />
+        <meta name="theme-color" content="#EFF6FF" />
       </head>
       <body className="overflow-x-hidden">
         {children}
