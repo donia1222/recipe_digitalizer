@@ -136,22 +136,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left content */}
             <div className="max-w-xl">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 mb-8"
-              >
+              <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 mb-8">
                 <Sparkles className="h-4 w-4 text-blue-600" />
                 <span className="text-sm font-semibold text-blue-700">Powered by Chat GPT</span>
-              </motion.div>
+              </div>
 
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-3xl sm:text-5xl lg:text-[58px] font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6"
-              >
+              <h1 className="text-3xl sm:text-5xl lg:text-[58px] font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
                 <span className="inline-flex items-center gap-2 sm:gap-3">
                   Digitale
                   <ChefHat className="inline h-8 w-8 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-blue-600" />
@@ -160,23 +150,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
                   Rezeptsammlung
                 </span>
-              </motion.h1>
+              </h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-lg text-gray-500 leading-relaxed mb-8"
-              >
+              <p className="text-lg text-gray-500 leading-relaxed mb-8">
                 Handgeschriebene Rezepte in Sekunden digitalisieren, verwalten und mit dem ganzen Team teilen — powered by künstlicher Intelligenz.
-              </motion.p>
+              </p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex flex-wrap gap-4 mb-10"
-              >
+              <div className="flex flex-wrap gap-4 mb-10">
                 <button
                   onClick={onAccessApp}
                   className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-blue-600 text-white font-semibold text-lg shadow-[0_6px_30px_rgba(37,99,235,0.35)] hover:bg-blue-700 hover:shadow-[0_4px_20px_rgba(37,99,235,0.25)] hover:-translate-y-0.5 transition-all duration-200 gap-2"
@@ -185,14 +165,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                   Zur Anwendung
                   <ArrowRight className="h-5 w-5" />
                 </button>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="flex flex-col gap-3"
-              >
+              <div className="flex flex-col gap-3">
                 {[
                   "KI-gestützte Rezepterkennung in Sekunden",
                   "Offline-fähig als installierbare App",
@@ -207,16 +182,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                     {text}
                   </div>
                 ))}
-              </motion.div>
+              </div>
             </div>
 
             {/* Right image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="hidden lg:flex justify-center"
-            >
+            <div className="hidden lg:flex justify-center">
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-br from-blue-200/50 to-cyan-200/50 rounded-[40px] blur-2xl" />
                 <img
@@ -245,7 +215,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
