@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodBarber - The greatest mobile app builder ever</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --begonia400: #fe6c75;
+            --begonia500: #e1545d;
+            --begonia600: #f06069;
+            --gunpowder50: #f4f7fb;
+            --gunpowder100: #dfeefb;
+            --gunpowder150: #c8d5e3;
+            --gunpowder200: #a8b8cc;
+            --gunpowder300: #8a9bb3;
+            --gunpowder400: #6b7d99;
+            --gunpowder500: #728198;
+            --gunpowder600: #3f4960;
+            --gunpowder700: #424e65;
+            --gunpowder800: #2a3347;
+            --gunpowder900: #0f1d2c;
+            --cerulean25: #f0f8fd;
+            --cerulean50: #e0f1fa;
+            --cerulean100: #b3ddf2;
+            --cerulean400: #15a0da;
+            --cerulean500: #0089c2;
+            --cerulean600: #006d9b;
+            --cerulean700: #004461;
+            --accent-green: #4dd35b;
+            --accent-orange: #ffb421;
+            --white: #ffffff;
+            --gap-XXL: 128px;
+            --gap-XL: 96px;
+            --gap-L: 64px;
+            --gap-M: 40px;
+            --gap-S: 24px;
+            --gap-XS: 16px;
+            --gap-XXS: 8px;
+            --radius-max: 600px;
+            --radius-L: 40px;
+            --radius-M: 20px;
+            --radius-S: 16px;
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.4;
+            color: #212529;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1 {
+            font-size: 66px;
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 44px;
+            line-height: 1.15;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 24px;
+            line-height: 1.15;
+            font-weight: 800;
+        }
+
+        h4 {
+            font-size: 18px;
+            line-height: 1.25;
+            font-weight: 700;
+        }
+
+        .text-secondary {
+            color: var(--gunpowder500);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .container-wide {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .gbcta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 58px;
+            padding: 0 32px;
+            border-radius: 1000px;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            cursor: pointer;
+            border: none;
+            transition: all 200ms ease-in-out;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .gbcta--primary {
+            background: var(--begonia400);
+            color: #fff;
+            box-shadow: 0 6px 30px rgba(254, 108, 117, 0.35);
+        }
+
+        .gbcta--primary:hover {
+            background: #ff8a91;
+            box-shadow: 0 4px 20px rgba(254, 108, 117, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .gbcta--white {
+            background: #fff;
+            color: var(--begonia400);
+            border: 2px solid var(--begonia400);
+        }
+
+        .gbcta--white:hover {
+            background: #fff5f5;
+        }
+
+        .gbcta--secondarygunpowder {
+            background: transparent;
+            color: var(--gunpowder700);
+            border: 2px solid var(--gunpowder200);
+        }
+
+        .gbcta--secondarygunpowder:hover {
+            border-color: var(--gunpowder400);
+        }
+
+        .gbcta--small {
+            height: 48px;
+            padding: 0 24px;
+            font-size: 16px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            height: 72px;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .header-logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-nav-item {
+            position: relative;
+            padding: 8px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gunpowder700);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 150ms;
+        }
+
+        .header-nav-item:hover {
+            background: var(--gunpowder50);
+        }
+
+        .header-nav-item svg {
+            width: 10px;
+            height: 10px;
+            margin-left: 4px;
+            transition: transform 200ms;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-login {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gunpowder700);
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 150ms;
+        }
+
+        .header-login:hover {
+            background: var(--gunpowder50);
+        }
+
+        .header-cta {
+            height: 44px;
+            padding: 0 24px;
+            font-size: 15px;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(180deg, #fff 10%, #fffbf2 60%, #fffcf5 100%);
+            padding: 80px 0 60px;
+            overflow: hidden;
+        }
+
+        .hero-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .hero-content {
+            max-width: 580px;
+        }
+
+        .hero-content h1 {
+            color: var(--gunpowder900);
+            margin-bottom: 24px;
+        }
+
+        .hero-content h1 span {
+            color: var(--begonia400);
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--gunpowder500);
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--gunpowder600);
+        }
+
+        .hero-feature-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1px;
+        }
+
+        .hero-feature-icon svg {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            max-width: 520px;
+            width: 100%;
+            border-radius: var(--radius-L);
+        }
+
+        /* ===== BRANDS CAROUSEL ===== */
+        .brands {
+            background: linear-gradient(180deg, #fffcf5 0%, #fff 100%);
+            padding: 60px 0;
+            overflow: hidden;
+        }
+
+        .brands-track {
+            display: flex;
+            animation: scroll 40s linear infinite;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .brands-track img {
+            height: 36px;
+            width: auto;
+            opacity: 0.45;
+            filter: grayscale(100%);
+            transition: opacity 300ms;
+            flex-shrink: 0;
+        }
+
+        .brands-track img:hover {
+            opacity: 0.7;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ===== SECTION SPACING ===== */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 64px;
+        }
+
+        .section-header h2 {
+            margin-bottom: 20px;
+            color: var(--gunpowder900);
+        }
+
+        .section-header p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--gunpowder500);
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            background: #fff;
+        }
+
+        .features-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .features-image img {
+            border-radius: var(--radius-L);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .features-content h2 {
+            margin-bottom: 20px;
+            color: var(--gunpowder900);
+        }
+
+        .features-content > p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--gunpowder500);
+            margin-bottom: 36px;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .features-list-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gunpowder700);
+        }
+
+        .features-list-check {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--cerulean50);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .features-list-check svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--cerulean400);
+        }
+
+        /* ===== SOLUTIONS ===== */
+        .solutions {
+            background: var(--gunpowder50);
+        }
+
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .solutions-cell {
+            background: #fff;
+            border-radius: var(--radius-M);
+            padding: 28px;
+            transition: all 250ms ease-out;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .solutions-cell:hover {
+            background: var(--cerulean25);
+            border-color: var(--cerulean100);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .solutions-cell-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 18px;
+            transition: transform 250ms ease-out;
+        }
+
+        .solutions-cell:hover .solutions-cell-icon {
+            transform: rotate(-8deg) scale(1.1);
+        }
+
+        .solutions-cell h4 {
+            margin-bottom: 10px;
+            color: var(--gunpowder800);
+        }
+
+        .solutions-cell p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--gunpowder500);
+        }
+
+        .solutions-cta-cell {
+            background: var(--begonia400);
+            border-radius: var(--radius-M);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #fff;
+            grid-column: span 2;
+        }
+
+        .solutions-cta-cell h3 {
+            margin-bottom: 12px;
+            font-size: 22px;
+        }
+
+        .solutions-cta-cell p {
+            font-size: 15px;
+            line-height: 1.5;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .solutions-cta-cell .gbcta {
+            width: fit-content;
+            background: #fff;
+            color: var(--begonia400);
+            font-weight: 700;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            background: #fff;
+        }
+
+        .how-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            counter-reset: step;
+        }
+
+        .how-step {
+            position: relative;
+            padding: 32px 24px;
+        }
+
+        .how-step-number {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--cerulean50);
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .how-step h4 {
+            margin-bottom: 12px;
+            color: var(--gunpowder800);
+            font-size: 18px;
+        }
+
+        .how-step p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--gunpowder500);
+        }
+
+        /* ===== AI SECTION ===== */
+        .ai-section {
+            background: var(--gunpowder900);
+            color: #fff;
+            border-radius: 0;
+        }
+
+        .ai-section .section-header h2 {
+            color: #fff;
+        }
+
+        .ai-section .section-header p {
+            color: var(--gunpowder300);
+        }
+
+        .ai-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .ai-card {
+            background: var(--gunpowder800);
+            border-radius: var(--radius-M);
+            overflow: hidden;
+            transition: transform 300ms ease;
+        }
+
+        .ai-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .ai-card-image {
+            width: 100%;
+            aspect-ratio: 3/2;
+            overflow: hidden;
+        }
+
+        .ai-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ai-card-content {
+            padding: 28px;
+        }
+
+        .ai-card-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 16px;
+        }
+
+        .ai-card-content h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .ai-card-content p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--gunpowder300);
+        }
+
+        /* ===== EXTENSIONS ===== */
+        .extensions {
+            background: #fff;
+        }
+
+        .extensions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .extension-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            background: #fff;
+            border-radius: var(--radius-S);
+            border: 1px solid #eef2f7;
+            transition: all 200ms ease;
+            cursor: pointer;
+        }
+
+        .extension-card:hover {
+            border-color: var(--cerulean100);
+            box-shadow: 0 8px 16px rgba(21, 160, 218, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .extension-card img {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .extension-card span {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gunpowder700);
+        }
+
+        /* ===== TECHNOLOGY ===== */
+        .technology {
+            background: var(--cerulean25);
+        }
+
+        .tech-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .tech-card {
+            background: #fff;
+            border-radius: var(--radius-L);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .tech-card-image {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .tech-card-image img {
+            width: 100%;
+        }
+
+        .tech-card-content {
+            padding: 36px;
+        }
+
+        .tech-card-content h3 {
+            margin-bottom: 12px;
+            font-size: 22px;
+            color: var(--gunpowder900);
+        }
+
+        .tech-card-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--gunpowder500);
+        }
+
+        /* ===== DESIGN ===== */
+        .design {
+            background: #fff;
+        }
+
+        .design-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .design-content h2 {
+            margin-bottom: 20px;
+            color: var(--gunpowder900);
+        }
+
+        .design-content > p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--gunpowder500);
+            margin-bottom: 28px;
+        }
+
+        .design-points {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .design-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--gunpowder600);
+        }
+
+        .design-point-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--begonia400);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .design-point-icon svg {
+            width: 14px;
+            height: 14px;
+            fill: #fff;
+        }
+
+        .design-image img {
+            border-radius: var(--radius-L);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== PWA ===== */
+        .pwa {
+            background: var(--gunpowder50);
+        }
+
+        .pwa-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .pwa-card {
+            background: #fff;
+            border-radius: var(--radius-M);
+            padding: 40px 32px;
+            text-align: center;
+            transition: transform 250ms ease;
+        }
+
+        .pwa-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .pwa-card-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 24px;
+        }
+
+        .pwa-card h4 {
+            margin-bottom: 14px;
+            font-size: 20px;
+            color: var(--gunpowder800);
+        }
+
+        .pwa-card p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--gunpowder500);
+        }
+
+        /* ===== TRUST METRICS ===== */
+        .trust {
+            background: var(--begonia400);
+            padding: 80px 0;
+            color: #fff;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            text-align: center;
+        }
+
+        .trust-stat-number {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .trust-stat-label {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            background: #fff;
+        }
+
+        .testimonials-carousel {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding: 8px 0;
+        }
+
+        .testimonials-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .testimonial-card {
+            min-width: 380px;
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: var(--radius-M);
+            padding: 32px;
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            transition: box-shadow 200ms;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 18px;
+        }
+
+        .testimonial-stars svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--accent-orange);
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--gunpowder600);
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .testimonial-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--cerulean50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            color: var(--cerulean500);
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--gunpowder800);
+        }
+
+        .testimonial-country {
+            font-size: 13px;
+            color: var(--gunpowder400);
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gunpowder150);
+            border: none;
+            cursor: pointer;
+            transition: background 200ms;
+        }
+
+        .carousel-dot.active {
+            background: var(--begonia400);
+            width: 28px;
+            border-radius: 5px;
+        }
+
+        /* ===== FAQ ===== */
+        .faq {
+            background: var(--gunpowder50);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--gunpowder150);
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 0;
+            cursor: pointer;
+            gap: 16px;
+            transition: color 200ms;
+        }
+
+        .faq-question:hover {
+            color: var(--begonia400);
+        }
+
+        .faq-question h4 {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .faq-question-arrow {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            transition: transform 300ms ease;
+        }
+
+        .faq-item.open .faq-question-arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 400ms ease, padding 400ms ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 200px;
+            padding-bottom: 24px;
+        }
+
+        .faq-answer p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--gunpowder500);
+        }
+
+        /* ===== CTA BANNER ===== */
+        .cta-banner {
+            background: linear-gradient(135deg, var(--gunpowder900) 0%, var(--gunpowder800) 100%);
+            padding: 100px 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .cta-banner h2 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .cta-banner p {
+            font-size: 18px;
+            color: var(--gunpowder300);
+            margin-bottom: 40px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--gunpowder900);
+            color: #fff;
+            padding: 80px 0 32px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            gap: 48px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--gunpowder400);
+            margin-top: 20px;
+            max-width: 280px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--gunpowder300);
+            margin-bottom: 20px;
+        }
+
+        .footer-col ul {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-col li a {
+            font-size: 14px;
+            color: var(--gunpowder400);
+            transition: color 200ms;
+        }
+
+        .footer-col li a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--gunpowder800);
+            padding-top: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-bottom p {
+            font-size: 13px;
+            color: var(--gunpowder500);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gunpowder800);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 200ms;
+        }
+
+        .footer-social a:hover {
+            background: var(--gunpowder700);
+        }
+
+        .footer-social svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--gunpowder400);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            h1 { font-size: 52px; }
+            h2 { font-size: 38px; }
+        }
+
+        @media (max-width: 992px) {
+            h1 { font-size: 44px; }
+            h2 { font-size: 34px; }
+
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            .hero-content { max-width: 100%; }
+            .hero-buttons { justify-content: center; }
+            .hero-features { align-items: center; }
+            .hero-image { order: -1; }
+            .hero-image img { max-width: 400px; }
+
+            .features-inner,
+            .design-inner {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .solutions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .how-steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ai-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .extensions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tech-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .pwa-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 36px; }
+            h2 { font-size: 28px; }
+            .section { padding: 72px 0; }
+
+            .header-nav { display: none; }
+
+            .solutions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .solutions-cta-cell {
+                grid-column: span 1;
+            }
+
+            .how-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .extensions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-stat-number {
+                font-size: 44px;
+            }
+
+            .testimonial-card {
+                min-width: 300px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .gbcta {
+                height: 48px;
+                padding: 0 20px;
+                font-size: 16px;
+            }
+        }
+
+        /* ===== UTILITY ===== */
+        .checkmark-svg {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+    <div class="header-inner">
+        <a href="#" class="header-logo">
+            <img src="https://portal.ww-cdn.com/portal_static/svg/logo-gb.913601a1efae.svg" alt="GoodBarber">
+        </a>
+        <nav class="header-nav">
+            <a href="#" class="header-nav-item">Product <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a href="#" class="header-nav-item">Solutions <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a href="#" class="header-nav-item">Reseller</a>
+            <a href="#" class="header-nav-item">Resources <svg viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a href="#" class="header-nav-item">Pricing</a>
+        </nav>
+        <div class="header-actions">
+            <a href="#" class="header-login">Login</a>
+            <a href="#" class="gbcta gbcta--primary header-cta">Create an app</a>
+        </div>
+    </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-content">
+            <h1>The greatest <span>mobile app builder</span> ever</h1>
+            <p class="hero-subtitle">GoodBarber is the best no-code app builder, trusted since 2011. Easily create and launch native iOS or Android apps with an intuitive, AI-enhanced interface, powerful ready-to-use features, and unmatched design quality.</p>
+            <div class="hero-buttons">
+                <a href="#" class="gbcta gbcta--primary">Start for free</a>
+                <a href="#" class="gbcta gbcta--secondarygunpowder">Explore Extensions</a>
+            </div>
+            <ul class="hero-features">
+                <li class="hero-feature">
+                    <span class="hero-feature-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                    Build your app easily with our AI-powered intuitive interface.
+                </li>
+                <li class="hero-feature">
+                    <span class="hero-feature-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                    Integrate powerful pre-built features from our unmatched extension store.
+                </li>
+                <li class="hero-feature">
+                    <span class="hero-feature-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                    Be sure to get the most beautiful apps, guaranteed.
+                </li>
+            </ul>
+        </div>
+        <div class="hero-image">
+            <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/section-hero-illustration-mobile-tablet-s-2_3@small.39b8a01a3c83.png" alt="GoodBarber App Builder">
+        </div>
+    </div>
+</section>
+
+<!-- ===== BRANDS ===== -->
+<section class="brands">
+    <div class="brands-track" id="brandsTrack">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/siemens@2x.f96dbeb63736.png" alt="Siemens">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/levis@2x.f91bbdc0352e.png" alt="Levi's">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/fox@2x.2f83f32be13f.png" alt="Fox">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/cocacola@2x.910d9ae19970.png" alt="Coca-Cola">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/adidas@2x.6afe64877930.png" alt="Adidas">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/bridgestone@2x.84186c825492.png" alt="Bridgestone">
+        <!-- Duplicated for seamless scroll -->
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/siemens@2x.f96dbeb63736.png" alt="Siemens">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/levis@2x.f91bbdc0352e.png" alt="Levi's">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/fox@2x.2f83f32be13f.png" alt="Fox">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/cocacola@2x.910d9ae19970.png" alt="Coca-Cola">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/adidas@2x.6afe64877930.png" alt="Adidas">
+        <img src="https://portal.ww-cdn.com/portal_static/images/brands_3/bridgestone@2x.84186c825492.png" alt="Bridgestone">
+    </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section features">
+    <div class="container">
+        <div class="features-inner">
+            <div class="features-image">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/features/demo-apps@small.ec3f4a28988e.jpg" alt="App Demo">
+            </div>
+            <div class="features-content">
+                <h2>Simplicity and Power combined</h2>
+                <p>At GoodBarber, every decision is made to provide you with the best app builder possible. We believe in simplicity without sacrificing power. Take advantage of our unique approach to create your app!</p>
+                <ul class="features-list">
+                    <li class="features-list-item">
+                        <span class="features-list-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        Intuitive app creation interface
+                    </li>
+                    <li class="features-list-item">
+                        <span class="features-list-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        190+ Extensions to enhance your app
+                    </li>
+                    <li class="features-list-item">
+                        <span class="features-list-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        Stunning pre-built app templates for a great UX
+                    </li>
+                    <li class="features-list-item">
+                        <span class="features-list-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        Awesome support for app creators
+                    </li>
+                    <li class="features-list-item">
+                        <span class="features-list-check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        Native apps for iOS and Android
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SOLUTIONS ===== -->
+<section class="section solutions">
+    <div class="container">
+        <div class="section-header">
+            <h2>One builder, endless solutions</h2>
+            <p>Whatever your project, GoodBarber has the tools to make it happen. Explore our ready-to-use solutions designed for every industry.</p>
+        </div>
+        <div class="solutions-grid">
+            <div class="solutions-cell">
+                <img class="solutions-cell-icon" src="https://portal.ww-cdn.com/portal_static/images/home_coral/solutions_svg/bag-shopping.03b1b3a1f631.svg" alt="eCommerce">
+                <h4>eCommerce app</h4>
+                <p>Boost sales, conversions and loyalty with a mobile store.</p>
+            </div>
+            <div class="solutions-cell">
+                <img class="solutions-cell-icon" src="https://portal.ww-cdn.com/portal_static/images/home_coral/solutions_svg/dollar_mobile_bold.d0325e31d3b9.svg" alt="Memberships">
+                <h4>Memberships</h4>
+                <p>Monetize content with a subscription-based app for exclusive access.</p>
+            </div>
+            <div class="solutions-cell">
+                <img class="solutions-cell-icon" src="https://portal.ww-cdn.com/portal_static/images/home_coral/solutions_svg/calendar-plus.5079fd4f2efb.svg" alt="Scheduling">
+                <h4>Scheduling</h4>
+                <p>Optimize bookings and appointments effortlessly.</p>
+            </div>
+            <div class="solutions-cell">
+                <div class="solutions-cell-icon" style="width:48px;height:48px;background:var(--cerulean50);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" fill="var(--cerulean400)"/><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" fill="var(--cerulean400)"/></svg>
+                </div>
+                <h4>Online Courses</h4>
+                <p>Share knowledge and train your audience with a dedicated learning app.</p>
+            </div>
+            <div class="solutions-cell">
+                <div class="solutions-cell-icon" style="width:48px;height:48px;background:var(--cerulean50);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="var(--cerulean400)"/></svg>
+                </div>
+                <h4>RAG Chatbot</h4>
+                <p>Offer an intelligent assistant based on your content, delivering answers 24/7.</p>
+            </div>
+            <div class="solutions-cell">
+                <div class="solutions-cell-icon" style="width:48px;height:48px;background:var(--cerulean50);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z" fill="var(--cerulean400)"/></svg>
+                </div>
+                <h4>Newspaper</h4>
+                <p>Deliver breaking news and articles with a professional media app.</p>
+            </div>
+            <div class="solutions-cta-cell">
+                <h3>Looking for something specific?</h3>
+                <p>Discover all our solutions tailored for every industry and use case.</p>
+                <a href="#" class="gbcta gbcta--small">Browse all solutions</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <h2>How easy is it?</h2>
+            <p>Creating your app with GoodBarber is as simple as 1-2-3. We've designed our process to be intuitive and enjoyable.</p>
+        </div>
+        <div class="how-steps">
+            <div class="how-step">
+                <div class="how-step-number">01</div>
+                <h4>Add your content</h4>
+                <p>Use our intuitive editor to manage app content. Connect your content sources or create it with our integrated CMS.</p>
+            </div>
+            <div class="how-step">
+                <div class="how-step-number">02</div>
+                <h4>Customize your design</h4>
+                <p>Inject your brand identity through easy app design customization.</p>
+            </div>
+            <div class="how-step">
+                <div class="how-step-number">03</div>
+                <h4>Pick enhanced features</h4>
+                <p>Choose from our extensive library of extensions to add powerful functionalities.</p>
+            </div>
+            <div class="how-step">
+                <div class="how-step-number">04</div>
+                <h4>Preview and publish</h4>
+                <p>Test your app in real-time on various devices and publish it to app stores with one click.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== AI SECTION ===== -->
+<section class="section ai-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Your AI copilot to build faster. And better.</h2>
+            <p>With GoodBarber, artificial intelligence becomes a natural part of your creation process. Generate content, translate, automate &mdash; you stay in control, while AI takes care of the rest.</p>
+        </div>
+        <div class="ai-cards">
+            <div class="ai-card">
+                <div class="ai-card-image">
+                    <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/section-ai-assistants-assisant-mobile-3_2@small.42506a605633.jpg" alt="AI Assistant">
+                </div>
+                <div class="ai-card-content">
+                    <img class="ai-card-icon" src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/ai_assistant.347dd2987545.svg" alt="AI Assistant Icon">
+                    <h3>AI Assistant</h3>
+                    <p>Generate texts, titles, descriptions, and multilingual translations with the power of OpenAI.</p>
+                </div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-card-image">
+                    <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/section-ai-assistants-chatbot-mobile-3_2@small.56c3396b2158.jpg" alt="RAG Chatbot">
+                </div>
+                <div class="ai-card-content">
+                    <img class="ai-card-icon" src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/ai_chatbot.884563f5c46b.svg" alt="Chatbot Icon">
+                    <h3>RAG Chatbot</h3>
+                    <p>Offer an intelligent assistant based on your app's content, delivering relevant answers 24/7.</p>
+                </div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-card-image">
+                    <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/section-ai-assistants-design-mobile-3_2@small.cc2396e64295.jpg" alt="AI-assisted design">
+                </div>
+                <div class="ai-card-content">
+                    <img class="ai-card-icon" src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/ai_design.23fd25023e8c.svg" alt="Design Icon">
+                    <h3>AI-assisted design</h3>
+                    <p>Automatically generate a consistent color palette with a single click.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== EXTENSIONS ===== -->
+<section class="section extensions">
+    <div class="container">
+        <div class="section-header">
+            <h2>Unlock infinite possibilities with our extensions</h2>
+            <p>Enhance your GoodBarber app with a wide range of extensions designed to meet all your needs. Integrate content, streamline workflows, add features and connect with external services effortlessly.</p>
+        </div>
+        <div class="extensions-grid">
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/iap@small.60bb0e112800.png" alt="Membership">
+                <span>Membership</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/auth@small.11db04baac95.png" alt="Authentication">
+                <span>Authentication</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/wordpress@small.27db345c68eb.png" alt="WordPress">
+                <span>WordPress</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/chatgpt@small.175b5f7d4ebc.png" alt="ChatGPT">
+                <span>ChatGPT</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/assistant@small.c45bdd2d2c34.png" alt="AI Assistant">
+                <span>AI Assistant</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/applepay@small.1da17b082ddf.png" alt="Apple Pay">
+                <span>Apple Pay</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/stripe@small.82c22778ebb8.png" alt="Stripe">
+                <span>Stripe</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/cms@small.20607c2d0b49.png" alt="CMS">
+                <span>CMS</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/admob@small.af4aa8c6834c.png" alt="Google Admob">
+                <span>Google Admob</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/youtube@small.619553c4d4ab.png" alt="YouTube">
+                <span>YouTube</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/spotify@small.0b230460c107.png" alt="Spotify">
+                <span>Spotify</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/zapier@small.69351c8d796e.png" alt="Zapier">
+                <span>Zapier</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/booking@small.78a53a4c8772.png" alt="Appointment Booking">
+                <span>Appointment Booking</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/rss@small.25fef4492fc5.png" alt="RSS Feed">
+                <span>RSS Feed</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/palette@small.0a3e0cc91367.png" alt="Genius Palette">
+                <span>Genius Palette</span>
+            </div>
+            <div class="extension-card">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/extensions/squarespace@small.d8add006aa53.png" alt="Squarespace">
+                <span>Squarespace</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TECHNOLOGY ===== -->
+<section class="section technology">
+    <div class="container">
+        <div class="section-header">
+            <h2>Fast and beautiful native apps</h2>
+            <p>Create stunning, high-performing apps using the latest technologies from Apple and Google. With GoodBarber, you get real native apps: secure, fast, smooth and visually appealing.</p>
+        </div>
+        <div class="tech-cards">
+            <div class="tech-card">
+                <div class="tech-card-image">
+                    <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/techno/techno-swift@small.9b4acbacb554.png" alt="iOS Swift">
+                </div>
+                <div class="tech-card-content">
+                    <h3>iOS Apps</h3>
+                    <p>Developed in Swift for an unmatched user experience, fully integrated with the iOS ecosystem.</p>
+                </div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-card-image">
+                    <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/techno/techno-kotlin@small.f5c508af92a7.png" alt="Android Kotlin">
+                </div>
+                <div class="tech-card-content">
+                    <h3>Android Apps</h3>
+                    <p>Crafted in Kotlin, delivering top-tier performance and support from Google.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== DESIGN ===== -->
+<section class="section design">
+    <div class="container">
+        <div class="design-inner">
+            <div class="design-content">
+                <h2>Beautiful design, infinite combinations</h2>
+                <p>At GoodBarber, we love design. Crafted by professionals and based on precise visual principles, our design system gives you the freedom to create a unique interface for your app&mdash;without compromising on quality.</p>
+                <div class="design-points">
+                    <div class="design-point">
+                        <span class="design-point-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        Our expertly designed foundations are waiting to be customized
+                    </div>
+                    <div class="design-point">
+                        <span class="design-point-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        You can easily customize graphic elements like colors, fonts, borders, shadows and more
+                    </div>
+                    <div class="design-point">
+                        <span class="design-point-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></span>
+                        Our design system ensures pixel-perfect consistency across all devices
+                    </div>
+                </div>
+            </div>
+            <div class="design-image">
+                <img src="https://portal.ww-cdn.com/portal_static/images/home_coral/v2/section-design-illustration-mobile-4_3@small.b49d3d1e2a17.jpg" alt="Design System">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PWA ===== -->
+<section class="section pwa">
+    <div class="container">
+        <div class="section-header">
+            <h2>Boost your SEO with a PWA</h2>
+            <p>Enhance your app's reach with a web version using GoodBarber's all-in-one interface, creating PWA, Android, and iOS apps in one go.</p>
+        </div>
+        <div class="pwa-cards">
+            <div class="pwa-card">
+                <div class="pwa-card-icon">
+                    <img src="https://portal.ww-cdn.com/portal_static/svg/coral/icon-seo.e7a80f2f9697.svg" alt="SEO">
+                </div>
+                <h4>Discoverability</h4>
+                <p>Our Progressive Web Apps (PWAs) are SEO-optimized, attracting organic traffic with fast loading and excellent accessibility.</p>
+            </div>
+            <div class="pwa-card">
+                <div class="pwa-card-icon">
+                    <img src="https://portal.ww-cdn.com/portal_static/svg/coral/icon-snippet.c105f9a4b0a3.svg" alt="Rich Snippets">
+                </div>
+                <h4>Rich Snippets Integration</h4>
+                <p>Boost your visibility with rich snippets, providing enhanced search results that improve click-through rates and SEO performance.</p>
+            </div>
+            <div class="pwa-card">
+                <div class="pwa-card-icon">
+                    <img src="https://portal.ww-cdn.com/portal_static/svg/coral/icon-laptop-mobile.731c210f07dd.svg" alt="Responsive">
+                </div>
+                <h4>Responsive Power</h4>
+                <p>Progressive Web Apps offer remarkable flexibility, seamlessly adapting to all screens and devices.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TRUST METRICS ===== -->
+<section class="trust">
+    <div class="container">
+        <div class="trust-grid">
+            <div class="trust-stat">
+                <div class="trust-stat-number">15M+</div>
+                <div class="trust-stat-label">Yearly downloads</div>
+            </div>
+            <div class="trust-stat">
+                <div class="trust-stat-number">4.5</div>
+                <div class="trust-stat-label">Rating on Trustpilot</div>
+            </div>
+            <div class="trust-stat">
+                <div class="trust-stat-number">31</div>
+                <div class="trust-stat-label">Languages</div>
+            </div>
+            <div class="trust-stat">
+                <div class="trust-stat-number">2011</div>
+                <div class="trust-stat-label">Year founded</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section testimonials">
+    <div class="container">
+        <div class="section-header">
+            <h2>Why Our Users Love Us</h2>
+        </div>
+        <div class="testimonials-carousel" id="testimonialsCarousel">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="testimonial-text">"Excellent product; excellent service. Not only is GoodBarber an excellent service for those who wish to build apps, but it provides excellent service as well."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">AE</div>
+                    <div>
+                        <div class="testimonial-name">Aneel</div>
+                        <div class="testimonial-country">AE</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="testimonial-text">"We are Roma Web Service S.r.l. of Rome and we have been working with GoodBarber for over 7 years... thanks to Emilie, Federica and the rest of this wonderful team."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">RW</div>
+                    <div>
+                        <div class="testimonial-name">Roma Web Service</div>
+                        <div class="testimonial-country">IT</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="testimonial-text">"GoodBarber is without a doubt the best mobile app development platform out there. I've been working with them for over 6 years and I've never had any problems."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">JA</div>
+                    <div>
+                        <div class="testimonial-name">Junior Andrade</div>
+                        <div class="testimonial-country">BR</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="testimonial-text">"I've had a successful app with GoodBarber for 10 years... Their app templates are gorgeous, the interface is user friendly."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">MD</div>
+                    <div>
+                        <div class="testimonial-name">Mary Davis</div>
+                        <div class="testimonial-country">US</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <p class="testimonial-text">"GoodBarber is the easiest to use and feature-rich platform currently on the market. The learning curve is very fast."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">EM</div>
+                    <div>
+                        <div class="testimonial-name">Emanuele</div>
+                        <div class="testimonial-country">IT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-dots" id="carouselDots">
+            <button class="carousel-dot active" data-index="0"></button>
+            <button class="carousel-dot" data-index="1"></button>
+            <button class="carousel-dot" data-index="2"></button>
+            <button class="carousel-dot" data-index="3"></button>
+            <button class="carousel-dot" data-index="4"></button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section faq">
+    <div class="container">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>Can I try GoodBarber for free?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>Yes! GoodBarber offers a free trial so you can explore all features before committing to a plan. Start building your app today with no credit card required.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>What's a native app?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>A native app is an application developed specifically for a mobile operating system (iOS or Android) using the platform's native programming language, ensuring optimal performance and user experience.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>What is a PWA?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>A Progressive Web App (PWA) is a web application that provides a native app-like experience through a web browser, offering features like offline access, push notifications, and fast loading.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>What is an app builder?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>An app builder is a no-code platform that allows anyone to create mobile applications without programming knowledge. It provides visual tools and pre-built components to design and publish apps.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>Who should go for an app builder?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>App builders are ideal for small businesses, entrepreneurs, content creators, and organizations that want a professional mobile presence without the cost and complexity of custom development.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>What are the top advantages of using an app builder?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>Key advantages include reduced development time and cost, no coding required, professional design templates, easy maintenance, and the ability to publish to both iOS and Android from a single platform.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>Do I need to build 3 different apps: PWA, Android, iOS?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>No! With GoodBarber, you create one app and it automatically generates versions for PWA, Android, and iOS. One interface, three platforms.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>How long does it take to create my app?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>You can have a basic app ready in just a few hours. More complex projects may take a few days, depending on the content and features you want to include.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>How can I make money with my app?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>GoodBarber offers multiple monetization options including in-app purchases, subscriptions, advertising (AdMob), eCommerce, and membership-based content access.</p></div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h4>Does my app function offline?</h4>
+                    <svg class="faq-question-arrow" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="faq-answer"><p>Yes, GoodBarber apps support offline mode. Content is cached locally so users can access it even without an internet connection.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<section class="cta-banner">
+    <div class="container">
+        <h2>Ready to build your app?</h2>
+        <p>Join thousands of app creators who trust GoodBarber to bring their ideas to life. Start your free trial today.</p>
+        <a href="#" class="gbcta gbcta--primary" style="font-size:20px;height:62px;padding:0 40px;">Start for free</a>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <img src="https://portal.ww-cdn.com/portal_static/svg/logo-gb.913601a1efae.svg" alt="GoodBarber" style="height:28px;filter:brightness(0) invert(1);">
+                <p>GoodBarber is the best no-code app builder. Create stunning native iOS, Android, and PWA apps without coding. Trusted since 2011.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Content apps</a></li>
+                    <li><a href="#">eCommerce apps</a></li>
+                    <li><a href="#">Extensions Store</a></li>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">AI-Assisted Creation</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Academy</a></li>
+                    <li><a href="#">Video tutorials</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Updates & Releases</a></li>
+                    <li><a href="#">Online help</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Reseller</h4>
+                <ul>
+                    <li><a href="#">Reseller program</a></li>
+                    <li><a href="#">How to sell an app</a></li>
+                    <li><a href="#">Reseller testimonials</a></li>
+                    <li><a href="#">Reseller Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 GoodBarber. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="#" aria-label="Twitter">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="#" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+                <a href="#" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="#" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+    // FAQ Accordion
+    function toggleFaq(element) {
+        const faqItem = element.parentElement;
+        const isOpen = faqItem.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.classList.remove('open');
+        });
+
+        // Open clicked if it was closed
+        if (!isOpen) {
+            faqItem.classList.add('open');
+        }
+    }
+
+    // Testimonials Carousel
+    const carousel = document.getElementById('testimonialsCarousel');
+    const dots = document.querySelectorAll('.carousel-dot');
+
+    if (carousel && dots.length) {
+        carousel.addEventListener('scroll', () => {
+            const scrollLeft = carousel.scrollLeft;
+            const cardWidth = carousel.querySelector('.testimonial-card').offsetWidth + 24;
+            const index = Math.round(scrollLeft / cardWidth);
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        });
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.dataset.index);
+                const cardWidth = carousel.querySelector('.testimonial-card').offsetWidth + 24;
+                carousel.scrollTo({
+                    left: index * cardWidth,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+        });
+    });
+
+    // Header scroll effect
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 100) {
+            header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
+        } else {
+            header.style.boxShadow = 'none';
+        }
+
+        lastScroll = currentScroll;
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Apply fade-in to sections
+    document.querySelectorAll('.section-header, .features-inner, .solutions-grid, .how-steps, .ai-cards, .extensions-grid, .tech-cards, .design-inner, .pwa-cards, .trust-grid').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+</script>
+
+</body>
+</html>

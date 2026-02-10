@@ -2,13 +2,11 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Shield, Users, UserCheck, ArrowLeft, Lock, User, Eye, EyeOff, ChefHat } from "lucide-react"
+import { Shield, UserCheck, ArrowLeft, Lock, User, Eye, EyeOff, ChefHat, ArrowRight, Sparkles } from "lucide-react"
 import { UserService } from "@/lib/services/userService"
 import { useToast } from "@/components/ui/use-toast"
+import { motion } from "framer-motion"
 
 interface LoginPageProps {
   onLogin: (role: "admin" | "worker" | "guest") => void
@@ -32,8 +30,6 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
         const viewportHeight = window.visualViewport?.height || window.innerHeight
         const windowHeight = window.screen.height
         const heightDifference = windowHeight - viewportHeight
-
-        // If height difference is significant (keyboard is showing)
         setKeyboardVisible(heightDifference > 150)
       }
     }
@@ -44,7 +40,6 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
     }
   }, [])
 
-  // Check if password is correct
   const correctPassword = process.env.NEXT_PUBLIC_RECIPE
   const isPasswordCorrect = password === correctPassword && password.length > 0
 
@@ -56,7 +51,6 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
 
     try {
       if (selectedRole === 'admin') {
-        // Admin login requires username and password
         if (!username || !password) {
           toast({
             title: "Error",
@@ -67,13 +61,10 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
           return
         }
 
-        // Try database login
         const result = await UserService.login(username, password)
 
         if (result.success && result.user) {
-          // Check if user has admin role or higher privileges
           if (result.user.role === 'admin') {
-            // Store user info
             localStorage.setItem('recipe-auth', 'granted')
             localStorage.setItem('user-role', 'admin')
             localStorage.setItem('current-user', JSON.stringify(result.user))
@@ -89,7 +80,6 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
             })
           }
         } else if (username === 'admin' && isPasswordCorrect) {
-          // Fallback to environment variable password for admin only
           localStorage.setItem('recipe-auth', 'granted')
           localStorage.setItem('user-role', 'admin')
           onLogin('admin')
@@ -101,7 +91,6 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
           })
         }
       } else if (selectedRole === 'worker') {
-        // Worker login requires username and password
         if (!username || !password) {
           toast({
             title: "Error",
@@ -114,12 +103,11 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
 
         const result = await UserService.login(username, password)
         if (result.success && result.user) {
-          // Only users with 'worker' role can login as worker
           const userRole = result.user.role
 
           if (userRole === 'worker') {
             localStorage.setItem('user-role', 'worker')
-            localStorage.setItem('actual-role', userRole) // Store actual role
+            localStorage.setItem('actual-role', userRole)
             localStorage.setItem('current-user', JSON.stringify(result.user))
             if (result.token) {
               localStorage.setItem('auth-token', result.token)
@@ -140,7 +128,6 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
           })
         }
       } else {
-        // Guest login requires username and password
         if (!username || !password) {
           toast({
             title: "Error",
@@ -153,12 +140,11 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
 
         const result = await UserService.login(username, password)
         if (result.success && result.user) {
-          // Only users with 'guest' role can login as guest
           const userRole = result.user.role
 
           if (userRole === 'guest') {
             localStorage.setItem('user-role', 'guest')
-            localStorage.setItem('actual-role', userRole) // Store actual role
+            localStorage.setItem('actual-role', userRole)
             localStorage.setItem('current-user', JSON.stringify(result.user))
             if (result.token) {
               localStorage.setItem('auth-token', result.token)
@@ -202,17 +188,11 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
     setShowPassword(false)
   }
 
-  // Handle input focus for mobile
   const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsInputFocused(true)
-
-    // Scroll into view on mobile with delay for keyboard
     if (window.innerWidth <= 768) {
       setTimeout(() => {
-        e.target.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        })
+        e.target.scrollIntoView({ behavior: "smooth", block: "center" })
       }, 300)
     }
   }
@@ -221,228 +201,248 @@ export default function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) 
     setIsInputFocused(false)
   }
 
-  const getRoleConfig = (role: "admin" | "worker" | "guest") => {
-    switch (role) {
-      case "admin":
-        return {
-          icon: Shield,
-          title: "Administrator",
-          description: "Vollzugriff auf alle Funktionen und Einstellungen",
-          color: "text-slate-700 dark:text-slate-300",
-          bgColor: "bg-slate-50 dark:bg-slate-800/50",
-          borderColor: "border-slate-200 dark:border-slate-700",
-          buttonColor: "bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 dark:text-slate-900",
-        }
-      case "worker":
-        return {
-          icon: Users,
-          title: "Mitarbeiter",
-          description: "Zugriff auf Rezeptverwaltung und Digitalisierung",
-          color: "text-blue-700 dark:text-blue-300",
-          bgColor: "bg-blue-50 dark:bg-blue-900/20",
-          borderColor: "border-blue-200 dark:border-blue-800",
-          buttonColor: "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600",
-        }
-      case "guest":
-        return {
-          icon: UserCheck,
-          title: "Gast",
-          description: "Eingeschränkter Zugriff zum Durchsuchen von Rezepten",
-          color: "text-emerald-700 dark:text-emerald-300",
-          bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
-          borderColor: "border-emerald-200 dark:border-emerald-800",
-          buttonColor: "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600",
-        }
-      default:
-        return {
-          icon: User,
-          title: "Benutzer",
-          description: "",
-          color: "text-gray-700 dark:text-gray-300",
-          bgColor: "bg-gray-50 dark:bg-gray-800/50",
-          borderColor: "border-gray-200 dark:border-gray-700",
-          buttonColor: "bg-gray-900 hover:bg-gray-800 dark:bg-gray-100 dark:hover:bg-gray-200 dark:text-gray-900",
-        }
+  const roles = [
+    {
+      id: "admin" as const,
+      icon: Shield,
+      title: "Administrator",
+      description: "Vollzugriff auf alle Funktionen und Einstellungen",
+      gradient: "from-slate-600 to-slate-800",
+      iconBg: "bg-slate-100",
+      iconColor: "text-slate-700",
+      features: ["Benutzerverwaltung", "Rezepte genehmigen", "Systemstatistiken"]
+    },
+    {
+      id: "worker" as const,
+      icon: ChefHat,
+      title: "Mitarbeiter",
+      description: "Zugriff auf Rezeptverwaltung und Digitalisierung",
+      gradient: "from-blue-500 to-blue-700",
+      iconBg: "bg-blue-100",
+      iconColor: "text-blue-600",
+      features: ["Rezepte erstellen", "KI-Digitalisierung", "Kommentare & Likes"]
+    },
+    {
+      id: "guest" as const,
+      icon: UserCheck,
+      title: "Gast",
+      description: "Eingeschränkter Zugriff zum Durchsuchen von Rezepten",
+      gradient: "from-emerald-500 to-emerald-700",
+      iconBg: "bg-emerald-100",
+      iconColor: "text-emerald-600",
+      features: ["Rezepte ansehen", "Bibliothek durchsuchen", "Rezepte herunterladen"]
     }
-  }
+  ]
 
+  // ===== LOGIN FORM VIEW =====
   if (selectedRole) {
-    const roleConfig = getRoleConfig(selectedRole)
-    const IconComponent = roleConfig.icon
+    const role = roles.find(r => r.id === selectedRole)!
+    const IconComponent = role.icon
 
     return (
       <div
-        className={`min-h-screen  flex justify-center p-4 transition-all duration-300 ${isInputFocused || keyboardVisible ? "items-start pt-8 md:items-center md:pt-4" : "items-center"}`}
+        className={`min-h-screen bg-white flex justify-center transition-all duration-300 ${isInputFocused || keyboardVisible ? "items-start pt-8 md:items-center md:pt-4" : "items-center"}`}
+        style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
       >
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <div
-              className={`w-16 h-16 ${roleConfig.bgColor} ${roleConfig.borderColor} border-2 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm`}
-            >
-              <IconComponent className={`h-8 w-8 ${roleConfig.color}`} />
+        {/* Background */}
+        <div className="fixed inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50 -z-10" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="w-full max-w-md px-6"
+        >
+          {/* Header */}
+          <div className="text-center mb-10">
+            <div className={`w-16 h-16 ${role.iconBg} rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm`}>
+              <IconComponent className={`h-8 w-8 ${role.iconColor}`} />
             </div>
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">{roleConfig.title}</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Melden Sie sich mit Ihren Anmeldedaten an</p>
+            <h1 className="text-2xl font-extrabold text-gray-900 mb-2 tracking-tight">{role.title}</h1>
+            <p className="text-sm text-gray-500">Melden Sie sich mit Ihren Anmeldedaten an</p>
           </div>
 
-          <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-lg">
-            <CardHeader className="space-y-1 pb-6">
-              <CardTitle className="text-xl font-semibold text-center text-gray-900 dark:text-white">
-                Anmeldung
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="username" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Benutzername
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="username"
-                      type="text"
-                      placeholder="Benutzername eingeben"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
-                      className="pl-10 h-11 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-500"
-                      required
-                    />
-                  </div>
-                </div>
+          {/* Form Card */}
+          <div className="bg-white rounded-[20px] border border-gray-200 shadow-[0_8px_32px_rgba(0,0,0,0.06)] p-8">
+            <h2 className="text-lg font-bold text-gray-900 text-center mb-6">Anmeldung</h2>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Passwort
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
-                      className="pl-10 pr-10 h-11 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-500"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
+            <form onSubmit={handleLogin} className="space-y-5">
+              <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-semibold text-gray-700">
+                  Benutzername
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="Benutzername eingeben"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    className="pl-11 h-12 bg-gray-50 border-gray-200 rounded-xl focus:border-blue-400 focus:ring-blue-100 text-[15px]"
+                    required
+                  />
                 </div>
+              </div>
 
-                <div className="flex gap-3 pt-2">
-                  <Button
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-semibold text-gray-700">
+                  Passwort
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    className="pl-11 pr-11 h-12 bg-gray-50 border-gray-200 rounded-xl focus:border-blue-400 focus:ring-blue-100 text-[15px]"
+                    required
+                  />
+                  <button
                     type="button"
-                    variant="outline"
-                    onClick={resetSelection}
-                    className="flex-1 h-11 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Zurück
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isLoading || !username || !password}
-                    className={`flex-1 h-11 text-white font-medium transition-all duration-200 ${
-                      roleConfig.buttonColor
-                    }`}
-                  >
-                    {isLoading ? "Anmelden..." : "Anmelden"}
-                  </Button>
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+
+              <div className="flex gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={resetSelection}
+                  className="flex-1 h-12 rounded-xl border border-gray-200 bg-white text-gray-700 font-semibold text-[15px] hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Zurück
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading || !username || !password}
+                  className={`flex-1 h-12 rounded-xl bg-gradient-to-r ${role.gradient} text-white font-semibold text-[15px] shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-lg`}
+                >
+                  {isLoading ? "Anmelden..." : "Anmelden"}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Footer */}
+          <p className="text-center text-xs text-gray-400 mt-8">
+            Rezept Digitalisierung System · Lweb Schweiz
+          </p>
+        </motion.div>
       </div>
     )
   }
 
+  // ===== ROLE SELECTION VIEW =====
   return (
-    <div className="min-h-screen">
-      {/* Header with back button */}
-      {onBackToLanding && (
-        <div className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 shadow-sm">
-          <div className="container mx-auto px-4 sm:px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  onClick={onBackToLanding}
-                  variant="outline"
-                  size="sm"
-                  className="h-9 w-9 p-0 border-gray-300 hover:bg-gray-50 bg-transparent"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
+    <div
+      className="min-h-screen bg-white"
+      style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
+    >
+      {/* Background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50 -z-10" />
+      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-blue-100/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 -z-10" />
 
-                <div className="flex items-center gap-3">
-              
-                  <div>
-                
-                    <p className="text-sm text-gray-600">Wählen Sie Ihre Rolle, um fortzufahren</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/* Header */}
+      {onBackToLanding && (
+        <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
+          <div className="max-w-5xl mx-auto px-6 h-16 flex items-center">
+            <button
+              onClick={onBackToLanding}
+              className="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4 text-gray-600" />
+            </button>
+            <span className="ml-4 text-sm text-gray-500">Zurück zur Startseite</span>
           </div>
         </div>
       )}
 
-      <div className={`flex items-center justify-center p-4 ${onBackToLanding ? 'pt-24 min-h-screen' : 'min-h-screen'}`}>
+      <div className={`flex items-center justify-center px-6 ${onBackToLanding ? 'pt-12 pb-16 min-h-[calc(100vh-64px)]' : 'min-h-screen py-16'}`}>
         <div className="w-full max-w-4xl">
-        <div className="text-center mb-8">
-   
-        </div>
+          {/* Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-1.5 mb-6">
+              <Sparkles className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-semibold text-blue-700">Anmeldung</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
+              Wählen Sie Ihre Rolle
+            </h1>
+            <p className="text-gray-500 text-lg">
+              Melden Sie sich an, um auf die Anwendung zuzugreifen
+            </p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {(["admin", "worker", "guest"] as const).map((role) => {
-            const config = getRoleConfig(role)
-            const IconComponent = config.icon
+          {/* Role Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {roles.map((role, index) => {
+              const IconComponent = role.icon
 
-            return (
-              <Card
-                key={role}
-                className={`${config.bgColor} ${config.borderColor} border-2 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group`}
-                onClick={() => handleRoleSelect(role)}
-              >
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 bg-white dark:bg-gray-900 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200 mx-auto mb-4 border border-gray-200 dark:border-gray-700">
-                    <IconComponent className={`h-8 w-8 ${config.color}`} />
-                  </div>
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">{config.title}</CardTitle>
-                  <CardDescription className="text-sm text-gray-600 dark:text-gray-400 text-pretty">
-                    {config.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="flex items-center justify-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-4">
-                    <Lock className="h-3 w-3" />
-                    <span>Anmeldung erforderlich</span>
-                  </div>
-                  <Button
-                    className={`w-full h-10 text-white font-medium ${config.buttonColor} transition-colors duration-200`}
+              return (
+                <motion.div
+                  key={role.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <div
+                    onClick={() => handleRoleSelect(role.id)}
+                    className="group bg-white rounded-[20px] border border-gray-200 p-7 cursor-pointer hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] hover:border-blue-200 transition-all duration-300"
                   >
-                    {role === "guest" ? "Als Gast fortfahren" : "Anmelden"}
-                  </Button>
-                </CardContent>
-              </Card>
-            )
-          })}
-        </div>
+                    {/* Icon */}
+                    <div className={`w-14 h-14 ${role.iconBg} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300`}>
+                      <IconComponent className={`h-7 w-7 ${role.iconColor}`} />
+                    </div>
 
-        <div className="text-center mt-16">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Rezept Digitalisierung System © 2025 Lweb Schweiz</p>
-        </div>
+                    {/* Text */}
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{role.title}</h3>
+                    <p className="text-sm text-gray-500 mb-5 leading-relaxed">{role.description}</p>
+
+                    {/* Features */}
+                    <div className="space-y-2.5 mb-6">
+                      {role.features.map((feature, fi) => (
+                        <div key={fi} className="flex items-center gap-2.5">
+                          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
+                            <svg className="w-3 h-3 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                          </div>
+                          <span className="text-sm text-gray-600">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Button */}
+                    <button className={`w-full h-11 rounded-xl bg-gradient-to-r ${role.gradient} text-white font-semibold text-sm shadow-md group-hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2`}>
+                      {role.id === "guest" ? "Als Gast fortfahren" : "Anmelden"}
+                      <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          {/* Footer */}
+          <div className="text-center mt-14">
+            <p className="text-xs text-gray-400">Rezept Digitalisierung System · Lweb Schweiz</p>
+          </div>
         </div>
       </div>
     </div>
