@@ -1107,7 +1107,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
           {/* Modal */}
           <div className="relative bg-white rounded-t-[20px] sm:rounded-[20px] shadow-2xl w-full max-w-lg max-h-[70vh] flex flex-col overflow-hidden">
             {/* Header - sticky */}
-            <div className="sticky top-0 z-10 bg-white flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <div className="sticky top-0 z-10 bg-white flex items-center justify-between px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-bold text-gray-900">
                 {legalModal === "datenschutz" && "Datenschutzerklärung"}
                 {legalModal === "agb" && "Allgemeine Geschäftsbedingungen"}
@@ -1115,9 +1115,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
               </h3>
               <button
                 onClick={() => setLegalModal(null)}
-                className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors flex-shrink-0"
+                className="w-9 h-9 rounded-xl bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors flex-shrink-0"
               >
-                <X className="h-4 w-4 text-gray-600" />
+                <X className="h-5 w-5 text-gray-700" />
               </button>
             </div>
             {/* Content */}
