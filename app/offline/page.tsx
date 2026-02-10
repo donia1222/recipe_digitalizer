@@ -16,6 +16,7 @@ export default function OfflinePage() {
               d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
             />
           </svg>
+          
         </div>
         <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
           Sin conexión
