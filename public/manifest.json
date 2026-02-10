@@ -4,8 +4,8 @@
   "description": "Digitaliza tus recetas con IA",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#DBEAFE",
-  "theme_color":  "#DBEAFE",
+  "background_color": "#ffffff",
+  "theme_color":  "#ffffff",
   "orientation": "portrait-primary",
   "icons": [
     {

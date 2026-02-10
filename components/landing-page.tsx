@@ -257,7 +257,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
               <h1 className="text-4xl sm:text-5xl lg:text-[58px] font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
                 <span className="inline-flex items-center gap-2 sm:gap-3">
                   Digitale
-                  <ChefHat className="inline h-8 w-8 sm:h-12 sm:w-12 lg:h-14 lg:w-14 text-blue-600" />
+                  <motion.span
+                    animate={{ rotate: [0, -10, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                    className="inline-block"
+                  >
+                    <ChefHat className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-blue-600" />
+                  </motion.span>
                 </span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
@@ -650,19 +656,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
       {/* ===== FOOTER ===== */}
       <footer className="py-10 bg-gray-900 text-center">
         <div className="max-w-4xl mx-auto px-6">
-          <p className="text-gray-400 mb-4">
-            Pflege- und Betreuungszentrum Büelriet - Gemeinde Sevelen
-          </p>
-          <div className="mb-4 flex items-center justify-center gap-4 text-sm text-gray-500">
-            <span>AGB</span>
-            <span className="text-gray-700">·</span>
-            <span>Datenschutz</span>
-            <span className="text-gray-700">·</span>
-            <span>Impressum</span>
-            <span className="text-gray-700">·</span>
-            <span>Kontakt</span>
-          </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mb-4">
             Entwickelt von{" "}
             <a href="https://www.lweb.ch" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">
               Lweb Schweiz
