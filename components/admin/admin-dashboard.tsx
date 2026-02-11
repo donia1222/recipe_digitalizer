@@ -19,6 +19,7 @@ import {
   MessageCircle,
   Bot,
   Utensils,
+  Home,
 } from "lucide-react"
 import RecipeManagement from "./recipe-management"
 import UserManagement from "./user-management"
@@ -369,50 +370,63 @@ export default function AdminDashboard() {
 
       {/* Header */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            {currentView === "dashboard" ? (
+              <button
+                onClick={handleBackToMain}
+                disabled={isNavigating}
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors disabled:opacity-50"
+                title="Zurück zur Startseite"
+              >
+                <ArrowLeft className={`h-5 w-5 text-blue-600 ${isNavigating ? "animate-pulse" : ""}`} />
+              </button>
+            ) : (
+              <button
+                onClick={() => setCurrentView("dashboard")}
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+                title="Zurück zum Dashboard"
+              >
+                <ArrowLeft className="h-5 w-5 text-blue-600" />
+              </button>
+            )}
+            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+            <div className="flex flex-col leading-none">
+              <div>
+                <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
+                <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
+              </div>
+              {currentView !== "dashboard" && (
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className="text-[11px] sm:text-xs text-gray-400 font-medium">Admin</span>
+                  <span className="text-[11px] sm:text-xs text-gray-300">/</span>
+                  <span className="text-[11px] sm:text-xs text-blue-500 font-semibold">
+                    {currentView === "recipes" && "Rezepteverwaltung"}
+                    {currentView === "users" && "Benutzerverwaltung"}
+                    {currentView === "subadmins" && "Sub-Administratoren"}
+                    {currentView === "pending" && "Ausstehende Rezepte"}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+          {currentView !== "dashboard" && (
             <button
               onClick={handleBackToMain}
               disabled={isNavigating}
-              className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors disabled:opacity-50"
+              className="text-xs sm:text-sm text-gray-400 hover:text-blue-600 transition-colors flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-blue-50"
               title="Zurück zur Startseite"
             >
-              <ArrowLeft className={`h-5 w-5 text-blue-600 ${isNavigating ? "animate-pulse" : ""}`} />
+              <Home className="h-4 w-4" />
+              <span className="hidden sm:inline">Startseite</span>
             </button>
-            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
-            <div className="leading-none">
-              <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
-              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
-            </div>
-          </div>
+          )}
         </div>
         {/* Gradient fade */}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
       </div>
 
-      {currentView !== "dashboard" && (
-        <div className="fixed top-16 left-0 right-0 z-40 bg-white/80 backdrop-blur-sm border-b border-blue-100/60">
-          <div className="max-w-7xl mx-auto px-6 py-3">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setCurrentView("dashboard")}
-                className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl px-3 py-2 transition-colors"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Dashboard
-              </button>
-              <div className="text-sm font-medium text-gray-500">
-                / {currentView === "recipes" && "Rezepteverwaltung"}
-                {currentView === "users" && "Benutzerverwaltung"}
-                {currentView === "subadmins" && "Sub-Administratoren"}
-                {currentView === "pending" && "Ausstehende Rezepte"}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className={`relative max-w-7xl mx-auto px-6 pb-12 ${currentView !== "dashboard" ? "pt-32" : "pt-24"}`}>
+      <div className={`relative max-w-7xl mx-auto px-4 sm:px-6 pb-12 pt-24`}>
         {currentView === "dashboard" && <DashboardView />}
         {currentView === "recipes" && <RecipeManagement />}
         {currentView === "users" && <UserManagement users={users} setUsers={setUsers} />}
