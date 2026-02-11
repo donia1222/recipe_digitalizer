@@ -247,83 +247,6 @@ export default function HomeDashboard({
           </div>
         </div>
 
-        {/* Digitalisieren & Manuelle cards (admin/worker only) */}
-        {(userRole === "admin" || userRole === "worker") && (
-          <div className="mb-8">
-            <div className="grid gap-5 grid-cols-1 md:grid-cols-2">
-              {/* Rezepte Digitalisieren */}
-              <div
-                className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
-                onClick={onStartDigitalization}
-              >
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
-                  <Scan className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Rezepte Digitalisieren</h3>
-                <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
-                  Scannen oder fotografieren Sie Ihre Rezepte, um sie zu digitalisieren
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Camera className="h-3.5 w-3.5 text-blue-500" />
-                    </div>
-                    <span>Foto machen</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Upload className="h-3.5 w-3.5 text-blue-500" />
-                    </div>
-                    <span>Bild hochladen</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Scan className="h-3.5 w-3.5 text-blue-500" />
-                    </div>
-                    <span>Scannen</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Manuelle Rezepte */}
-              {onOpenManualRecipes && (
-                <div
-                  className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
-                  onClick={onOpenManualRecipes}
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
-                    <Edit className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Manuelle Rezepte</h3>
-                  <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
-                    Erstellen Sie Rezepte von Hand mit unserem benutzerfreundlichen Formular
-                  </p>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Edit className="h-3.5 w-3.5 text-blue-500" />
-                      </div>
-                      <span>Rezept schreiben</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Plus className="h-3.5 w-3.5 text-blue-500" />
-                      </div>
-                      <span>Zutaten hinzufügen</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Send className="h-3.5 w-3.5 text-blue-500" />
-                      </div>
-                      <span>An Admin senden</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         {/* Rezept Archiv - Full width, green pastel */}
         <div className="mb-8">
           <div
@@ -402,6 +325,83 @@ export default function HomeDashboard({
             </div>
           </div>
         </div>
+
+        {/* Digitalisieren & Manuelle cards (admin/worker only) */}
+        {(userRole === "admin" || userRole === "worker") && (
+          <div className="mb-8">
+            <div className="grid gap-5 grid-cols-1 md:grid-cols-2">
+              {/* Rezepte Digitalisieren */}
+              <div
+                className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
+                onClick={onStartDigitalization}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+                  <Scan className="h-6 w-6 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Rezepte Digitalisieren</h3>
+                <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
+                  Scannen oder fotografieren Sie Ihre Rezepte, um sie zu digitalisieren
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Camera className="h-3.5 w-3.5 text-blue-500" />
+                    </div>
+                    <span>Foto machen</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Upload className="h-3.5 w-3.5 text-blue-500" />
+                    </div>
+                    <span>Bild hochladen</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                      <Scan className="h-3.5 w-3.5 text-blue-500" />
+                    </div>
+                    <span>Scannen</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Manuelle Rezepte */}
+              {onOpenManualRecipes && (
+                <div
+                  className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
+                  onClick={onOpenManualRecipes}
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+                    <Edit className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Manuelle Rezepte</h3>
+                  <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
+                    Erstellen Sie Rezepte von Hand mit unserem benutzerfreundlichen Formular
+                  </p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                        <Edit className="h-3.5 w-3.5 text-blue-500" />
+                      </div>
+                      <span>Rezept schreiben</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                        <Plus className="h-3.5 w-3.5 text-blue-500" />
+                      </div>
+                      <span>Zutaten hinzufügen</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                        <Send className="h-3.5 w-3.5 text-blue-500" />
+                      </div>
+                      <span>An Admin senden</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Profil cards */}
         <div
