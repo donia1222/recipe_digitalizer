@@ -259,7 +259,7 @@ export default function HomeDashboard({
                 <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
                   <Scan className="h-6 w-6 text-blue-600" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2">Rezepte Digitalisieren</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Rezepte Digitalisieren</h3>
                 <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
                   Scannen oder fotografieren Sie Ihre Rezepte, um sie zu digitalisieren
                 </p>
@@ -294,7 +294,7 @@ export default function HomeDashboard({
                   <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
                     <Edit className="h-6 w-6 text-blue-600" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">Manuelle Rezepte</h3>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Manuelle Rezepte</h3>
                   <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
                     Erstellen Sie Rezepte von Hand mit unserem benutzerfreundlichen Formular
                   </p>
