@@ -139,7 +139,6 @@ export default function HomeDashboard({
             <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
             <div className="leading-none">
               <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
-              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
             </div>
           </div>
 
@@ -213,6 +212,17 @@ export default function HomeDashboard({
                   </div>
                 )}
               </div>
+            )}
+
+            {/* Admin Panel Chip - Only for Admin */}
+            {userRole === "admin" && (
+              <button
+                onClick={() => router.push("/admin")}
+                className="h-10 px-4 rounded-xl bg-blue-50 flex items-center gap-2 hover:bg-blue-100 transition-colors border border-blue-100"
+              >
+                <Shield className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-semibold text-blue-700">Admin</span>
+              </button>
             )}
 
             <button
@@ -314,85 +324,93 @@ export default function HomeDashboard({
           </div>
         )}
 
-        {/* Archiv, Profil, Admin cards */}
-        <div
-          className={`grid gap-5 mb-8 ${
-            userRole === "admin"
-              ? "grid-cols-1 md:grid-cols-2"
-              : userRole === "worker"
-                ? "grid-cols-1 md:grid-cols-2"
-                : userRole === "guest"
-                  ? "grid-cols-1 max-w-2xl mx-auto"
-                  : "grid-cols-1 md:grid-cols-3"
-          }`}
-        >
-          {/* Rezept Archiv */}
+        {/* Rezept Archiv - Full width, green pastel */}
+        <div className="mb-8">
           <div
-            className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
+            className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-[20px] p-7 border border-emerald-100/60 hover:border-emerald-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-[250ms] cursor-pointer group"
             onClick={onOpenArchive}
           >
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
-              <BookOpen className="h-6 w-6 text-blue-600" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">Rezept Archiv</h3>
-            <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
-              {userRole === 'guest'
-                ? 'Rezepte ansehen und durchsuchen'
-                : 'Ihre digitalisierten Rezepte nach Kategorien organisieren und bearbeiten'
-              }
-            </p>
-            <div className="space-y-3">
-              {userRole === 'guest' ? (
-                <>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <BookOpen className="h-3.5 w-3.5 text-blue-500" />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
+                  <BookOpen className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800 mb-1">Rezept Archiv</h3>
+                  <p className="text-[15px] text-gray-500 leading-relaxed">
+                    {userRole === 'guest'
+                      ? 'Rezepte ansehen und durchsuchen'
+                      : 'Ihre digitalisierten Rezepte nach Kategorien organisieren und bearbeiten'
+                    }
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3 sm:gap-4">
+                {userRole === 'guest' ? (
+                  <>
+                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <BookOpen className="h-3.5 w-3.5 text-emerald-500" />
+                      </div>
+                      <span>Rezepte ansehen</span>
                     </div>
-                    <span>Rezepte ansehen</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Search className="h-3.5 w-3.5 text-blue-500" />
+                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <Search className="h-3.5 w-3.5 text-emerald-500" />
+                      </div>
+                      <span>Durchsuchen</span>
                     </div>
-                    <span>Bibliothek durchsuchen</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <MessageCircle className="h-3.5 w-3.5 text-blue-500" />
+                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <MessageCircle className="h-3.5 w-3.5 text-emerald-500" />
+                      </div>
+                      <span>Kommentare</span>
                     </div>
-                    <span>Kommentare lesen</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Download className="h-3.5 w-3.5 text-blue-500" />
+                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <Download className="h-3.5 w-3.5 text-emerald-500" />
+                      </div>
+                      <span>Herunterladen</span>
                     </div>
-                    <span>Rezepte herunterladen</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <BookOpen className="h-3.5 w-3.5 text-blue-500" />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <BookOpen className="h-3.5 w-3.5 text-emerald-500" />
+                      </div>
+                      <span>Rezepte verwalten</span>
                     </div>
-                    <span>Rezepte verwalten</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <ChefHat className="h-3.5 w-3.5 text-blue-500" />
+                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <ChefHat className="h-3.5 w-3.5 text-emerald-500" />
+                      </div>
+                      <span>Kategorien</span>
                     </div>
-                    <span>Kategorien erstellen</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Heart className="h-3.5 w-3.5 text-blue-500" />
+                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <Heart className="h-3.5 w-3.5 text-emerald-500" />
+                      </div>
+                      <span>Favoriten</span>
                     </div>
-                    <span>Favoriten markieren</span>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-100 flex-shrink-0 group-hover:bg-emerald-200 transition-colors">
+                <ArrowRight className="h-5 w-5 text-emerald-600" />
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Profil cards */}
+        <div
+          className={`grid gap-5 mb-8 ${
+            userRole === "worker"
+              ? "grid-cols-1 max-w-2xl mx-auto"
+              : "hidden"
+          }`}
+        >
 
           {/* Benutzer Profil (worker) */}
           {userRole === "worker" && (
@@ -430,27 +448,6 @@ export default function HomeDashboard({
             </div>
           )}
 
-          {/* Administration (admin) */}
-          {userRole === "admin" && (
-            <div
-              className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
-              onClick={() => router.push("/admin")}
-            >
-              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
-                <Shield className="h-6 w-6 text-blue-600" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Administration</h3>
-              <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
-                Verwalten von Benutzern, Rezepten, Subadministratoren und Systemkonfiguration
-              </p>
-              <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                  <ArrowRight className="h-3.5 w-3.5 text-blue-500" />
-                </div>
-                <span>Admin Panel</span>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* KI-Funktionen Section (admin only) */}
