@@ -1406,7 +1406,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                   <span className="text-sm font-semibold text-blue-700 hidden sm:inline">Admin</span>
                 </button>
               )}
-              {onOpenUsers && (
+              {onOpenUsers && userRole === 'worker' && (
                 <button
                   onClick={onOpenUsers}
                   className="h-10 px-4 rounded-xl bg-blue-50 flex items-center gap-2 hover:bg-blue-100 transition-colors border border-blue-100"
