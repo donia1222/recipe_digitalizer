@@ -188,8 +188,8 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
             </div>
           </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Desktop Nav - only on xl screens (1280px+) so iPad shows hamburger */}
+          <nav className="hidden xl:flex items-center gap-1">
             {navItems.map((item) => (
               <a
                 key={item.href}
@@ -207,10 +207,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onAccessApp }) => {
             </button>
           </nav>
 
-          {/* Mobile Hamburger */}
+          {/* Mobile/Tablet Hamburger - visible on iPad and phones (<1280px) */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="md:hidden w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center hover:bg-blue-700 transition-colors"
+            className="xl:hidden w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center hover:bg-blue-700 transition-colors"
           >
             <Menu className="h-5 w-5 text-white" />
           </button>

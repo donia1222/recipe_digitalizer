@@ -580,6 +580,43 @@ switch ($method) {
                 $params[':category_id'] = $data['category_id'];
             }
 
+            // Actualizar imagen principal (para cambio de Titelbild)
+            if (isset($data['image_base64'])) {
+                $newMainImage = $data['image_base64'];
+
+                // Optimizar la nueva imagen principal
+                $recipeIdStr = $existingRecipe['recipe_id'] ?? 'recipe_' . $id;
+                $optimizationResult = optimizeImage($newMainImage, $recipeIdStr . '_cover_' . time());
+                $newMainImage = $optimizationResult['optimized_data'];
+
+                $updateFields[] = 'image_base64 = :image_base64';
+                $params[':image_base64'] = $newMainImage;
+
+                // También guardar como archivo y actualizar image_url
+                try {
+                    preg_match('/data:image\/(\w+);base64,/', $newMainImage, $matches);
+                    $imageType = $matches[1] ?? 'jpg';
+                    $filename = $recipeIdStr . '_cover_' . time() . '.' . $imageType;
+                    $uploadPath = __DIR__ . '/uploads/' . $filename;
+
+                    if (!file_exists(__DIR__ . '/uploads')) {
+                        mkdir(__DIR__ . '/uploads', 0777, true);
+                    }
+
+                    $base64Clean = preg_replace('/^data:image\/\w+;base64,/', '', $newMainImage);
+                    $decodedImage = base64_decode($base64Clean);
+
+                    if (file_put_contents($uploadPath, $decodedImage)) {
+                        $newImageUrl = 'https://web.lweb.ch/recipedigitalizer/apis/uploads/' . $filename;
+                        $updateFields[] = 'image_url = :image_url';
+                        $params[':image_url'] = $newImageUrl;
+                        error_log("Cover image saved to: " . $uploadPath);
+                    }
+                } catch (Exception $imgError) {
+                    error_log("Error saving cover image: " . $imgError->getMessage());
+                }
+            }
+
             // Siempre actualizar updated_at
             $updateFields[] = 'updated_at = NOW()';
 

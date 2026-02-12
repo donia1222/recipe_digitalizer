@@ -124,6 +124,8 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
   const [showEditModal, setShowEditModal] = useState(false)
   const [editedRecipe, setEditedRecipe] = useState(recipe)
   const [heroImageIndex, setHeroImageIndexState] = useState(0)
+  const [overrideOriginalImage, setOverrideOriginalImage] = useState<string | null>(null)
+  const [isSavingCover, setIsSavingCover] = useState(false)
 
   // Persist heroImageIndex in localStorage
   const setHeroImageIndex = (index: number) => {
@@ -442,7 +444,7 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
 
     // Reset hero if the removed image was the hero
     if (heroImageIndex > 0) {
-      const heroInAll = originalImage ? heroImageIndex - 1 : heroImageIndex;
+      const heroInAll = effectiveOriginalImage ? heroImageIndex - 1 : heroImageIndex;
       if (heroInAll === index) {
         setHeroImageIndex(0);
       } else if (heroInAll > index) {
@@ -501,6 +503,64 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
         title: "Bild entfernt",
         description: "Das Bild wurde aus dem Rezept entfernt.",
       })
+    }
+  }
+
+  // Set an additional image as the main cover image (persists to database)
+  const setAsCoverImage = async (allImagesIndex: number) => {
+    if (!recipeId || isSavingCover) return
+
+    const currentMain = effectiveOriginalImage
+    const selectedImage = allImages[allImagesIndex]
+    if (!selectedImage || selectedImage === currentMain) return
+
+    setIsSavingCover(true)
+
+    try {
+      const numericId = await findNumericId(recipeId)
+      if (!numericId) {
+        throw new Error('Rezept nicht in der Datenbank gefunden')
+      }
+
+      // Build new additional images: old main image + all additional except selected
+      const selectedAdditionalIndex = effectiveOriginalImage ? allImagesIndex - 1 : allImagesIndex
+      const newAdditionalImages = recipeImages.filter((_, i) => i !== selectedAdditionalIndex)
+      if (currentMain) {
+        newAdditionalImages.unshift(currentMain) // old main goes to position 0
+      }
+
+      const response = await fetch(`https://web.lweb.ch/recipedigitalizer/apis/recipes-simple.php?id=${numericId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image_base64: selectedImage,
+          additional_images: newAdditionalImages
+        })
+      })
+
+      if (!response.ok) throw new Error('Fehler beim Speichern')
+
+      // Update local state
+      setOverrideOriginalImage(selectedImage)
+      setRecipeImages(newAdditionalImages)
+      setHeroImageIndex(0)
+
+      // Notify other components (archive, library)
+      window.dispatchEvent(new Event('recipeUpdated'))
+
+      toast({
+        title: "Titelbild geändert",
+        description: "Das neue Titelbild wurde gespeichert.",
+      })
+    } catch (error) {
+      console.error('Error setting cover image:', error)
+      toast({
+        title: "Fehler",
+        description: "Das Titelbild konnte nicht gespeichert werden.",
+        variant: "destructive"
+      })
+    } finally {
+      setIsSavingCover(false)
     }
   }
 
@@ -867,7 +927,8 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
   }
 
   // Combine all images (original + additional)
-  const allImages = originalImage ? [originalImage, ...recipeImages] : recipeImages
+  const effectiveOriginalImage = overrideOriginalImage || originalImage
+  const allImages = effectiveOriginalImage ? [effectiveOriginalImage, ...recipeImages] : recipeImages
 
   // Clamp heroImageIndex if images were removed
   const safeHeroIndex = heroImageIndex < allImages.length ? heroImageIndex : 0
@@ -1112,23 +1173,21 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
-                            setHeroImageIndex(allImagesIndex)
-                            toast({
-                              title: "Titelbild geändert",
-                              description: "Das Bild wurde als Titelbild festgelegt.",
-                            })
+                            setAsCoverImage(allImagesIndex)
                           }}
-                          className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-2.5 py-1 text-[10px] font-bold transition-colors duration-200 whitespace-nowrap flex items-center gap-1 shadow-md"
+                          disabled={isSavingCover}
+                          className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg px-2.5 py-1 text-[10px] font-bold transition-colors duration-200 whitespace-nowrap flex items-center gap-1 shadow-md"
                         >
                           <Crown className="h-3 w-3" />
-                          Als Titelbild
+                          {isSavingCover ? 'Speichern...' : 'Als Titelbild'}
                         </button>
                       )}
-                      {canEditRecipe && (
+                      {canEditRecipe && !isOriginal && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
-                            removeImage(originalImage ? index : index + 1)
+                            const recipeImagesIndex = effectiveOriginalImage ? allImagesIndex - 1 : allImagesIndex
+                            removeImage(recipeImagesIndex)
                           }}
                           className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 transition-colors duration-200"
                         >
@@ -1370,16 +1429,13 @@ const RecipeAnalyzer: React.FC<RecipeAnalyzerProps> = ({
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    setHeroImageIndex(currentImageIndex)
-                    toast({
-                      title: "Titelbild geändert",
-                      description: "Das Bild wurde als Titelbild festgelegt.",
-                    })
+                    setAsCoverImage(currentImageIndex)
                   }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors shadow-lg"
+                  disabled={isSavingCover}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors shadow-lg"
                 >
                   <Crown className="h-4 w-4" />
-                  Als Titelbild
+                  {isSavingCover ? 'Speichern...' : 'Als Titelbild'}
                 </button>
               )}
               {currentImageIndex === safeHeroIndex && (

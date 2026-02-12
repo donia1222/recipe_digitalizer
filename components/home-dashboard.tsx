@@ -247,161 +247,123 @@ export default function HomeDashboard({
           </div>
         </div>
 
-        {/* Rezept Archiv - Full width, green pastel */}
+        {/* === Main Action Cards === */}
         <div className="mb-8">
-          <div
-            className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-[20px] p-7 border border-emerald-100/60 hover:border-emerald-200 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-[250ms] cursor-pointer group"
-            onClick={onOpenArchive}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-              <div className="flex items-center gap-4 flex-1">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
-                  <BookOpen className="h-6 w-6 text-emerald-600" />
+          <div className={`grid gap-6 ${
+            (userRole === "admin" || userRole === "worker") && onOpenManualRecipes
+              ? "grid-cols-1 md:grid-cols-3"
+              : (userRole === "admin" || userRole === "worker")
+                ? "grid-cols-1 md:grid-cols-2"
+                : "grid-cols-1"
+          }`}>
+
+            {/* Rezept Archiv */}
+            <div
+              className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 rounded-[24px] p-8 cursor-pointer group hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(16,185,129,0.35)] transition-all duration-300"
+              onClick={onOpenArchive}
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/3" />
+              <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/3" />
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <BookOpen className="h-8 w-8 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-800 mb-1">Rezept Archiv</h3>
-                  <p className="text-[15px] text-gray-500 leading-relaxed">
-                    {userRole === 'guest'
-                      ? 'Rezepte ansehen und durchsuchen'
-                      : 'Ihre digitalisierten Rezepte nach Kategorien organisieren und bearbeiten'
-                    }
-                  </p>
+                <h3 className="text-2xl font-extrabold text-white mb-3">Rezept Archiv</h3>
+                <p className="text-base text-emerald-100 leading-relaxed mb-6">
+                  {userRole === 'guest'
+                    ? 'Rezepte ansehen und durchsuchen'
+                    : 'Alle Rezepte durchsuchen, organisieren und bearbeiten'
+                  }
+                </p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {userRole === 'guest' ? (
+                    <>
+                      {['Ansehen', 'Suchen', 'Kommentare'].map((label) => (
+                        <span key={label} className="inline-flex items-center px-3.5 py-2 rounded-xl bg-white/15 text-sm font-semibold text-white backdrop-blur-sm">
+                          {label}
+                        </span>
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {['Verwalten', 'Kategorien', 'Favoriten'].map((label) => (
+                        <span key={label} className="inline-flex items-center px-3.5 py-2 rounded-xl bg-white/15 text-sm font-semibold text-white backdrop-blur-sm">
+                          {label}
+                        </span>
+                      ))}
+                    </>
+                  )}
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-3 sm:gap-4">
-                {userRole === 'guest' ? (
-                  <>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <BookOpen className="h-3.5 w-3.5 text-emerald-500" />
-                      </div>
-                      <span>Rezepte ansehen</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <Search className="h-3.5 w-3.5 text-emerald-500" />
-                      </div>
-                      <span>Durchsuchen</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <MessageCircle className="h-3.5 w-3.5 text-emerald-500" />
-                      </div>
-                      <span>Kommentare</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <Download className="h-3.5 w-3.5 text-emerald-500" />
-                      </div>
-                      <span>Herunterladen</span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <BookOpen className="h-3.5 w-3.5 text-emerald-500" />
-                      </div>
-                      <span>Rezepte verwalten</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <ChefHat className="h-3.5 w-3.5 text-emerald-500" />
-                      </div>
-                      <span>Kategorien</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-[14px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <Heart className="h-3.5 w-3.5 text-emerald-500" />
-                      </div>
-                      <span>Favoriten</span>
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-100 flex-shrink-0 group-hover:bg-emerald-200 transition-colors">
-                <ArrowRight className="h-5 w-5 text-emerald-600" />
+                <div className="inline-flex items-center gap-2.5 bg-white/20 backdrop-blur-sm rounded-xl px-5 py-3 text-white font-bold text-sm group-hover:bg-white/30 group-hover:gap-3.5 transition-all duration-300">
+                  Archiv öffnen
+                  <ArrowRight className="h-4.5 w-4.5" />
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Digitalisieren & Manuelle cards (admin/worker only) */}
-        {(userRole === "admin" || userRole === "worker") && (
-          <div className="mb-8">
-            <div className="grid gap-5 grid-cols-1 md:grid-cols-2">
-              {/* Rezepte Digitalisieren */}
+            {/* Rezepte Digitalisieren (admin/worker only) */}
+            {(userRole === "admin" || userRole === "worker") && (
               <div
-                className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
+                className="relative overflow-hidden bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 rounded-[24px] p-8 cursor-pointer group hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(59,130,246,0.35)] transition-all duration-300"
                 onClick={onStartDigitalization}
               >
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
-                  <Scan className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Rezepte Digitalisieren</h3>
-                <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
-                  Scannen oder fotografieren Sie Ihre Rezepte, um sie zu digitalisieren
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Camera className="h-3.5 w-3.5 text-blue-500" />
-                    </div>
-                    <span>Foto machen</span>
+                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/3" />
+                <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/3" />
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Camera className="h-8 w-8 text-white" />
                   </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Upload className="h-3.5 w-3.5 text-blue-500" />
-                    </div>
-                    <span>Bild hochladen</span>
+                  <h3 className="text-2xl font-extrabold text-white mb-3">Rezept Digitalisieren</h3>
+                  <p className="text-base text-blue-100 leading-relaxed mb-6">
+                    Rezept fotografieren und per KI automatisch erkennen lassen
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {['Foto', 'Upload', 'Scanner'].map((label) => (
+                      <span key={label} className="inline-flex items-center px-3.5 py-2 rounded-xl bg-white/15 text-sm font-semibold text-white backdrop-blur-sm">
+                        {label}
+                      </span>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                      <Scan className="h-3.5 w-3.5 text-blue-500" />
-                    </div>
-                    <span>Scannen</span>
+                  <div className="inline-flex items-center gap-2.5 bg-white/20 backdrop-blur-sm rounded-xl px-5 py-3 text-white font-bold text-sm group-hover:bg-white/30 group-hover:gap-3.5 transition-all duration-300">
+                    Jetzt digitalisieren
+                    <ArrowRight className="h-4.5 w-4.5" />
                   </div>
                 </div>
               </div>
+            )}
 
-              {/* Manuelle Rezepte */}
-              {onOpenManualRecipes && (
-                <div
-                  className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:bg-blue-50/30 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group"
-                  onClick={onOpenManualRecipes}
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-[250ms]">
-                    <Edit className="h-6 w-6 text-blue-600" />
+            {/* Manuelle Rezepte (admin/worker only) */}
+            {(userRole === "admin" || userRole === "worker") && onOpenManualRecipes && (
+              <div
+                className="relative overflow-hidden bg-gradient-to-br from-violet-500 via-violet-600 to-purple-700 rounded-[24px] p-8 cursor-pointer group hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(139,92,246,0.35)] transition-all duration-300"
+                onClick={onOpenManualRecipes}
+              >
+                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/3 translate-x-1/3" />
+                <div className="absolute bottom-0 left-0 w-28 h-28 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/3" />
+                <div className="relative">
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <Edit className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Manuelle Rezepte</h3>
-                  <p className="text-[15px] text-gray-500 leading-relaxed mb-5">
-                    Erstellen Sie Rezepte von Hand mit unserem benutzerfreundlichen Formular
+                  <h3 className="text-2xl font-extrabold text-white mb-3">Manuell Erstellen</h3>
+                  <p className="text-base text-violet-100 leading-relaxed mb-6">
+                    Rezept von Hand eingeben und zur Freigabe senden
                   </p>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Edit className="h-3.5 w-3.5 text-blue-500" />
-                      </div>
-                      <span>Rezept schreiben</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Plus className="h-3.5 w-3.5 text-blue-500" />
-                      </div>
-                      <span>Zutaten hinzufügen</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-[15px] text-gray-500">
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
-                        <Send className="h-3.5 w-3.5 text-blue-500" />
-                      </div>
-                      <span>An Admin senden</span>
-                    </div>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {['Schreiben', 'Zutaten', 'Senden'].map((label) => (
+                      <span key={label} className="inline-flex items-center px-3.5 py-2 rounded-xl bg-white/15 text-sm font-semibold text-white backdrop-blur-sm">
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="inline-flex items-center gap-2.5 bg-white/20 backdrop-blur-sm rounded-xl px-5 py-3 text-white font-bold text-sm group-hover:bg-white/30 group-hover:gap-3.5 transition-all duration-300">
+                    Rezept schreiben
+                    <ArrowRight className="h-4.5 w-4.5" />
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Profil cards */}
         <div
@@ -474,7 +436,7 @@ export default function HomeDashboard({
               </div>
 
               {/* KI Sub-cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
                 {/* Rezepte mit KI erstellen */}
                 <div className="bg-white rounded-[20px] p-7 border border-transparent hover:border-blue-100 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] transition-all duration-[250ms] cursor-pointer group">
                   <div className="flex items-start gap-4">
