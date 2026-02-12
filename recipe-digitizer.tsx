@@ -63,9 +63,9 @@ export default function RecipeDigitizer({ handleLogout, userRole, onBackToLandin
   const [showCameraModal, setShowCameraModal] = useState<boolean>(false)
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
   const [currentRecipeId, setCurrentRecipeId] = useState<string | null>(null)
-  const [currentView, setCurrentView] = useState<'home' | 'library' | 'analyze' | 'archive' | 'users' | 'manual-recipes'>('home')
+  const [currentView, setCurrentView] = useState<'home' | 'library' | 'analyze' | 'archive' | 'users' | 'manual-recipes'>('archive')
   const [showServingsModal, setShowServingsModal] = useState<boolean>(false)
-  const [previousView, setPreviousView] = useState<'home' | 'library' | 'analyze' | 'archive' | 'users' | 'manual-recipes'>('home')
+  const [previousView, setPreviousView] = useState<'home' | 'library' | 'analyze' | 'archive' | 'users' | 'manual-recipes'>('archive')
   const [userSearchFilter, setUserSearchFilter] = useState<string | undefined>(undefined)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -149,19 +149,9 @@ export default function RecipeDigitizer({ handleLogout, userRole, onBackToLandin
       setApprovalMessage(null)
     }
 
-    // Ensure we always go back to home screen when coming from archive, users or manual-recipes page
-    if (currentView === 'archive' || currentView === 'users' || currentView === 'manual-recipes') {
-      setCurrentView('home')
-      setPreviousView('home')
-    } else if (currentView === 'analyze') {
-      // When going back from analyze view, return to the previous view (archive or library)
-      setCurrentView(previousView)
-      setPreviousView('home')
-    } else {
-      // Default behavior - use previous view or fall back to home
-      const targetView = previousView === currentView ? 'home' : previousView
-      setCurrentView(targetView)
-    }
+    // Always go back to archive (the main view)
+    setCurrentView('archive')
+    setPreviousView('archive')
   }
 
   // Handler for recipe updates from edit functionality
@@ -553,12 +543,18 @@ export default function RecipeDigitizer({ handleLogout, userRole, onBackToLandin
             }
           }}
           onBack={() => {
-            setUserSearchFilter(undefined) // Limpiar filtro al volver
+            setUserSearchFilter(undefined)
             goBack()
           }}
           initialSearchFilter={userSearchFilter}
           userRole={userRole}
           currentUserId={currentUser?.id}
+          isMainView={true}
+          onStartDigitalization={() => changeView('library')}
+          onOpenManualRecipes={() => changeView('manual-recipes')}
+          onOpenUsers={() => changeView('users')}
+          handleLogout={handleLogout}
+          onBackToLanding={onBackToLanding}
         />
       ) : currentView === 'users' ? (
         <UserPage
@@ -576,32 +572,64 @@ export default function RecipeDigitizer({ handleLogout, userRole, onBackToLandin
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
           </div>
 
-          {/* Header */}
+          {/* Header with tabs */}
           <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={goBack}
-                  className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
-                >
-                  <ArrowLeft className="h-5 w-5 text-blue-600" />
-                </button>
+              <div className="flex items-center gap-2.5">
                 <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
                 <div className="leading-none">
                   <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
-                  <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
                 </div>
               </div>
+              <div className="flex items-center gap-2">
+                {userRole === "admin" && (
+                  <button
+                    onClick={() => window.location.href = '/admin'}
+                    className="h-10 px-4 rounded-xl bg-blue-50 flex items-center gap-2 hover:bg-blue-100 transition-colors border border-blue-100"
+                  >
+                    <Shield className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm font-semibold text-blue-700 hidden sm:inline">Admin</span>
+                  </button>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center hover:bg-red-100 transition-colors"
+                >
+                  <LogOut className="h-5 w-5 text-red-500" />
+                </button>
+              </div>
             </div>
-            {/* Gradient fade */}
+            {(userRole === 'admin' || userRole === 'worker') && (
+              <div className="max-w-7xl mx-auto px-6 flex items-center gap-1 pb-2">
+                <button
+                  onClick={() => changeView('archive')}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition-colors"
+                >
+                  <FileText className="h-4 w-4" />
+                  Archiv
+                </button>
+                <button
+                  onClick={() => changeView('library')}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition-colors"
+                >
+                  <Camera className="h-4 w-4" />
+                  Digitalisieren
+                </button>
+                <button
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold"
+                >
+                  <FileText className="h-4 w-4" />
+                  Manuell
+                </button>
+              </div>
+            )}
             <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
           </div>
-          <div className="relative pt-24 pb-12">
+          <div className="relative pt-32 pb-12">
             <div className="max-w-4xl mx-auto px-6">
               <ManualRecipeCreator
                 onRecipeCreated={() => {
-                  // Optional: navigate back to home or show success message
-                  changeView('home')
+                  changeView('archive')
                 }}
               />
             </div>
@@ -683,8 +711,12 @@ export default function RecipeDigitizer({ handleLogout, userRole, onBackToLandin
             handleCameraCapture()
           }}
           onStartAnalysis={() => changeView('analyze')}
-          onBackToHome={() => changeView('home')}
+          onBackToHome={() => changeView('archive')}
           handleLogout={handleLogout}
+          onOpenArchive={() => changeView('archive')}
+          onOpenManualRecipes={() => changeView('manual-recipes')}
+          onOpenUsers={() => changeView('users')}
+          userRole={userRole}
         />
       ) : (
         // Vista de receta guardada - solo análisis con imágenes

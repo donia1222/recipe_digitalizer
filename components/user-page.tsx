@@ -734,122 +734,116 @@ Erstellt am: ${formatDate(recipe.createdAt)}`
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Header */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                onClick={onBack}
-                size="sm"
-                variant="outline"
-                className="border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 bg-transparent"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-
-              {/* Modern header with icon, title and subtitle */}
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30">
-                  <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    {((currentUser?.name || "Usuario").length > 20
-                      ? (currentUser?.name || "Usuario").substring(0, 20) + "..."
-                      : (currentUser?.name || "Usuario"))}
-                  </h1>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Profil & Einstellungen
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* User info and Notifications */}
-            <div className="flex items-center gap-3">
-
-
-        
-              {/* Notifications Bell */}
-              <div className="relative">
-                <Button
-                  onClick={() => setShowNotifications(!showNotifications)}
-                  variant="outline"
-                  size="sm"
-                  className="relative border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800"
-                >
-                  <Bell className="h-4 w-4" />
-                  {unreadNotifications > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
-                      {unreadNotifications}
-                    </span>
-                  )}
-                </Button>
-
-                {/* Notifications Dropdown */}
-                <AnimatePresence>
-                  {showNotifications && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50"
-                    >
-                      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                        <h3 className="font-semibold text-gray-800 dark:text-white">Benachrichtigungen</h3>
-                      </div>
-                      <div className="max-h-64 overflow-y-auto">
-                        {notifications.length === 0 ? (
-                          <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-                            Keine Benachrichtigungen
-                          </div>
-                        ) : (
-                          notifications.map((notification) => (
-                            <div
-                              key={notification.id}
-                              onClick={() => handleNotificationClick(notification)}
-                              className={`p-4 border-b border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                                !notification.read ? "bg-blue-50 dark:bg-blue-900/20" : ""
-                              }`}
-                            >
-                              <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0">
-                                  <Check className="h-5 w-5 text-green-500" />
-                                </div>
-                                <div className="flex-1">
-                                  <p className="text-sm font-medium text-gray-800 dark:text-white">Rezept genehmigt!</p>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    "{notification.recipeName}" wurde zur Rezept-Sammlung hinzugefügt
-                                  </p>
-                                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                                    {formatDate(notification.timestamp)}
-                                  </p>
-                                </div>
-                                {!notification.read && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
-                              </div>
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={onBack}
+              className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5 text-blue-600" />
+            </button>
+            <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
+            <div className="leading-none">
+              <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">
+                {((currentUser?.name || "Benutzer").length > 20
+                  ? (currentUser?.name || "Benutzer").substring(0, 20) + "..."
+                  : (currentUser?.name || "Benutzer"))}
+              </span>
             </div>
           </div>
+
+          <div className="flex items-center gap-2">
+            {/* Notifications Bell */}
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+              >
+                <Bell className="h-5 w-5 text-blue-600" />
+                {unreadNotifications > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs min-w-[18px] h-[18px] flex items-center justify-center rounded-full px-1 font-semibold">
+                    {unreadNotifications}
+                  </span>
+                )}
+              </button>
+
+              {/* Notifications Dropdown */}
+              <AnimatePresence>
+                {showNotifications && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 top-full mt-2 w-80 bg-white rounded-[20px] shadow-[0_12px_32px_rgba(0,0,0,0.1)] border border-blue-100/60 z-50"
+                  >
+                    <div className="p-5 border-b border-gray-100">
+                      <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                        <Bell className="h-4 w-4 text-blue-600" />
+                        Benachrichtigungen
+                      </h3>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto">
+                      {notifications.length === 0 ? (
+                        <div className="p-5 text-center text-gray-500">
+                          Keine Benachrichtigungen
+                        </div>
+                      ) : (
+                        notifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            onClick={() => handleNotificationClick(notification)}
+                            className={`p-4 border-b border-gray-50 cursor-pointer hover:bg-blue-50/40 transition-colors ${
+                              !notification.read ? "bg-blue-50/60" : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center">
+                                <Check className="h-4 w-4 text-emerald-600" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-semibold text-gray-800">Rezept genehmigt!</p>
+                                <p className="text-xs text-gray-500">
+                                  &quot;{notification.recipeName}&quot; wurde zur Sammlung hinzugefügt
+                                </p>
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {formatDate(notification.timestamp)}
+                                </p>
+                              </div>
+                              {!notification.read && <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center hover:bg-red-100 transition-colors"
+              >
+                <LogOut className="h-5 w-5 text-red-500" />
+              </button>
+            )}
+          </div>
         </div>
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
       </div>
 
       {/* Main Content */}
-      <div className="pt-20 pb-8">
-        <div className="container mx-auto px-4 sm:px-6">
+      <div className="pt-24 pb-8">
+        <div className="max-w-6xl mx-auto px-6">
           {/* Tab Navigation */}
           <div className="mb-8">
-            <div className="flex gap-2 bg-white/70 dark:bg-gray-800/70 p-2 rounded-xl backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50">
+            <div className="flex gap-1 p-1 bg-blue-50 rounded-2xl">
               <Button
                 onClick={() => setActiveTab("overview")}
                 variant={activeTab === "overview" ? "default" : "ghost"}
-                className={`flex-1 ${activeTab === "overview" ? "bg-blue-500 text-white" : ""}`}
+                className={`flex-1 rounded-xl h-11 text-sm font-semibold transition-all ${activeTab === "overview" ? "bg-blue-600 text-white shadow-md hover:bg-blue-700" : "text-gray-600 hover:text-gray-900 hover:bg-white/60"}`}
               >
                 <ChefHat className="h-4 w-4 mr-2" />
                 Übersicht
@@ -857,18 +851,18 @@ Erstellt am: ${formatDate(recipe.createdAt)}`
               <Button
                 onClick={() => setActiveTab("create")}
                 variant={activeTab === "create" ? "default" : "ghost"}
-                className={`flex-1 ${activeTab === "create" ? "bg-blue-500 text-white" : ""}`}
+                className={`flex-1 rounded-xl h-11 text-sm font-semibold transition-all ${activeTab === "create" ? "bg-blue-600 text-white shadow-md hover:bg-blue-700" : "text-gray-600 hover:text-gray-900 hover:bg-white/60"}`}
               >
                 <Plus className="h-4 w-4 mr-2" />
-                
+                Erstellen
               </Button>
               <Button
-              onClick={() => onOpenArchive(currentUser?.name)}
-                variant={activeTab === "history" ? "default" : "ghost"}
-                className={`flex-1 ${activeTab === "history" ? "bg-blue-500 text-white" : ""}`}
+                onClick={() => onOpenArchive(currentUser?.name)}
+                variant="ghost"
+                className="flex-1 rounded-xl h-11 text-sm font-semibold text-gray-600 hover:text-gray-900 hover:bg-white/60 transition-all"
               >
-                <BookOpen className="h-4 w-4 mr-2 c" />
-                
+                <BookOpen className="h-4 w-4 mr-2" />
+                Meine Rezepte
               </Button>
             </div>
           </div>

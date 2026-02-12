@@ -29,7 +29,13 @@ import {
   List,
   BookOpen,
   Loader2,
+  Shield,
+  LogOut,
+  Camera,
+  Edit,
+  Scan,
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -60,9 +66,17 @@ interface RecipeArchivePageProps {
   initialSearchFilter?: string
   userRole?: 'admin' | 'worker' | 'guest' | null
   currentUserId?: string
+  // New props for integrated tab navigation
+  onStartDigitalization?: () => void
+  onOpenManualRecipes?: () => void
+  onOpenUsers?: () => void
+  handleLogout?: () => void
+  onBackToLanding?: () => void
+  isMainView?: boolean // true when this is the default/main view (no back button)
 }
 
-const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, onBack, initialSearchFilter, userRole, currentUserId }) => {
+const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, onBack, initialSearchFilter, userRole, currentUserId, onStartDigitalization, onOpenManualRecipes, onOpenUsers, handleLogout, onBackToLanding, isMainView }) => {
+  const router = useRouter()
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [allRecipes, setAllRecipes] = useState<HistoryItem[]>([])
   const [recipeCounts, setRecipeCounts] = useState<{[key: string]: number}>({})
@@ -78,7 +92,7 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
   const [searchQuery, setSearchQuery] = useState(initialSearchFilter || "")
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined)
   const [availableUsers, setAvailableUsers] = useState<{id: string, name: string}[]>([])
-  const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
+  const [viewMode, setViewMode] = useState<'cards' | 'list'>('list')
   const [scrollPosition, setScrollPosition] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
@@ -1365,25 +1379,90 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
       <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button
-              onClick={onBack}
-              className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5 text-blue-600" />
-            </button>
+            {!isMainView && (
+              <button
+                onClick={onBack}
+                className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 text-blue-600" />
+              </button>
+            )}
             <img src="/1e9739e5-a2a7-4218-8384-5602515adbb7.png" alt="RezeptApp" className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl object-cover" />
             <div className="leading-none">
               <span className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">Rezeptsammlung</span>
-              <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>
+              {!isMainView && <span className="text-lg sm:text-xl font-extrabold text-blue-600 tracking-tight"> App</span>}
             </div>
           </div>
+
+          {/* Right side: action buttons when main view */}
+          {isMainView && (
+            <div className="flex items-center gap-2">
+              {userRole === "admin" && (
+                <button
+                  onClick={() => router.push("/admin")}
+                  className="h-10 px-4 rounded-xl bg-blue-50 flex items-center gap-2 hover:bg-blue-100 transition-colors border border-blue-100"
+                >
+                  <Shield className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-semibold text-blue-700 hidden sm:inline">Admin</span>
+                </button>
+              )}
+              {onOpenUsers && (
+                <button
+                  onClick={onOpenUsers}
+                  className="h-10 px-4 rounded-xl bg-blue-50 flex items-center gap-2 hover:bg-blue-100 transition-colors border border-blue-100"
+                >
+                  <Users className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-semibold text-blue-700 hidden sm:inline">Profil</span>
+                </button>
+              )}
+              {handleLogout && (
+                <button
+                  onClick={handleLogout}
+                  className="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center hover:bg-red-100 transition-colors"
+                >
+                  <LogOut className="h-5 w-5 text-red-500" />
+                </button>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* Tab bar when main view */}
+        {isMainView && (userRole === 'admin' || userRole === 'worker') && (
+          <div className="max-w-7xl mx-auto px-6 flex items-center gap-1 pb-2">
+            <button
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold"
+            >
+              <BookOpen className="h-4 w-4" />
+              Archiv
+            </button>
+            {onStartDigitalization && (
+              <button
+                onClick={onStartDigitalization}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition-colors"
+              >
+                <Camera className="h-4 w-4" />
+                Digitalisieren
+              </button>
+            )}
+            {onOpenManualRecipes && (
+              <button
+                onClick={onOpenManualRecipes}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition-colors"
+              >
+                <Edit className="h-4 w-4" />
+                Manuell
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Gradient fade */}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent translate-y-full pointer-events-none" />
       </div>
 
       {/* Search Bar */}
-      <div className="relative pt-24 px-6">
+      <div className={`relative px-6 ${isMainView && (userRole === 'admin' || userRole === 'worker') ? 'pt-32' : 'pt-24'}`}>
         <div className="max-w-7xl mx-auto mb-6">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-400 h-5 w-5" />
@@ -1942,35 +2021,107 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
               </div>
             </div>
 
-            <div className={viewMode === 'cards' ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" : "space-y-4"}>
+            <div className={viewMode === 'cards' ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" : "space-y-3"}>
               <AnimatePresence>
                 {finalFilteredHistory.map((item) => (
                   <motion.div
                     key={item.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Card
-                      className={`cursor-pointer hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-[250ms] bg-white group overflow-hidden rounded-[20px] ${
-                        viewMode === 'list'
-                          ? 'flex flex-row border-l-4 border-l-blue-200 border border-blue-100/60 hover:border-l-blue-400'
-                          : 'border border-blue-100/60'
-                      }`}
-                      onClick={() => onSelectRecipe(item)}
-                    >
-                      <div className={`relative ${viewMode === 'list' ? 'w-32 h-24 flex-shrink-0' : ''}`}>
-                        <Image
-                          src={item.image || "/placeholder.svg"}
-                          alt="Recipe"
-                          width={300}
-                          height={200}
-                          className={viewMode === 'list' ? "w-32 h-24 object-cover" : "w-full h-40 object-cover"}
-                        />
-                        {viewMode === 'cards' && (
+                    {viewMode === 'list' ? (
+                      /* ===== LIST VIEW - Modern Style ===== */
+                      <div
+                        className="cursor-pointer bg-white rounded-2xl border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-blue-100 transition-all duration-300 group overflow-hidden"
+                        onClick={() => onSelectRecipe(item)}
+                      >
+                        <div className="flex items-center gap-4 p-3">
+                          {/* Thumbnail */}
+                          <div className="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden">
+                            <Image
+                              src={item.image || "/placeholder.svg"}
+                              alt="Recipe"
+                              width={80}
+                              height={80}
+                              className="w-20 h-20 object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                            {item.isFavorite && (
+                              <div className="absolute top-1 left-1 bg-yellow-400 rounded-full p-0.5">
+                                <Star className="h-2.5 w-2.5 text-white fill-current" />
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex-1 min-w-0 py-0.5">
+                            <h4 className="font-semibold text-gray-900 text-[15px] leading-snug line-clamp-1 mb-1">
+                              {item.title || extractRecipeTitle(item.analysis)}
+                            </h4>
+                            <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
+                              <span className="font-medium text-gray-500">{getUserName(item.user_id)}</span>
+                              <span>·</span>
+                              <span>{formatDate(item.date)}</span>
+                            </div>
+                            {/* Category tag */}
+                            {item.folderId && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 text-blue-600">
+                                {getMainCategories().find(f => f.id === item.folderId)?.name ||
+                                 getMainCategories().flatMap(f => getSubcategories(f.id)).find(s => s.id === item.folderId)?.name ||
+                                 'Kategorie'}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Actions */}
+                          <div className="flex items-center gap-1.5 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            {currentUserId && (
+                              <button
+                                onClick={(e) => handleToggleFavorite(item, e)}
+                                className={`p-2 rounded-xl transition-all duration-200 ${
+                                  item.isFavorite
+                                    ? 'bg-yellow-50 text-yellow-500 hover:bg-yellow-100'
+                                    : 'bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-600'
+                                }`}
+                                title={item.isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
+                              >
+                                <Star className={`h-4 w-4 ${item.isFavorite ? 'fill-current' : ''}`} />
+                              </button>
+                            )}
+                            {canUserEditRecipe(item.user_id) && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleDeleteRecipe(item)
+                                }}
+                                className="p-2 rounded-xl bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all duration-200"
+                                title="Rezept löschen"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Chevron */}
+                          <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-blue-400 flex-shrink-0 transition-colors duration-200" />
+                        </div>
+                      </div>
+                    ) : (
+                      /* ===== CARDS VIEW ===== */
+                      <Card
+                        className="cursor-pointer hover:shadow-[0_12px_32px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-[250ms] bg-white group overflow-hidden rounded-[20px] border border-blue-100/60"
+                        onClick={() => onSelectRecipe(item)}
+                      >
+                        <div className="relative">
+                          <Image
+                            src={item.image || "/placeholder.svg"}
+                            alt="Recipe"
+                            width={300}
+                            height={200}
+                            className="w-full h-40 object-cover"
+                          />
                           <div className="absolute top-3 right-3 flex gap-1">
-                            {/* Favorite Button - Always visible for logged users */}
                             {currentUserId && (
                               <button
                                 onClick={(e) => handleToggleFavorite(item, e)}
@@ -1984,7 +2135,6 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                                 <Star className={`h-3 w-3 ${item.isFavorite ? 'fill-current' : ''}`} />
                               </button>
                             )}
-                            {/* Delete Button - Only for users who can edit */}
                             {canUserEditRecipe(item.user_id) && (
                               <button
                                 onClick={(e) => {
@@ -1998,83 +2148,45 @@ const RecipeArchivePage: React.FC<RecipeArchivePageProps> = ({ onSelectRecipe, o
                               </button>
                             )}
                           </div>
-                        )}
-                      </div>
-                      <CardContent className={viewMode === 'list' ? "p-4 flex-1 relative" : "p-4"}>
-                        <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 flex-1 pr-2">
-                            {item.title || extractRecipeTitle(item.analysis)}
-                          </h4>
-                          {viewMode === 'list' && (
-                            <div className="flex gap-1 items-center">
-                              {/* Favorite Button - Always visible for logged users */}
-                              {currentUserId && (
-                                <button
-                                  onClick={(e) => handleToggleFavorite(item, e)}
-                                  className={`p-1.5 rounded-full shadow-sm transition-all mr-2 duration-200 flex-shrink-0 ${
-                                    item.isFavorite
-                                      ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                                      : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                                  }`}
-                                  title={item.isFavorite ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
-                                >
-                                  <Star className={`h-3 w-3 ${item.isFavorite ? 'fill-current' : ''}`} />
-                                </button>
-                              )}
-                              {/* Delete Button - Only for users who can edit */}
-                              {canUserEditRecipe(item.user_id) && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleDeleteRecipe(item)
-                                  }}
-                                  className="bg-red-500 hover:bg-red-600 text-white p-1.5 rounded-full shadow-sm transition-all duration-200 flex-shrink-0"
-                                  title="Rezept löschen"
-                                >
-                                  <Trash2 className="h-3 w-3" />
-                                </button>
-                              )}
+                        </div>
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between mb-3">
+                            <h4 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 flex-1 pr-2">
+                              {item.title || extractRecipeTitle(item.analysis)}
+                            </h4>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
+                            <Calendar className="h-3 w-3" />
+                            <span>Von {getUserName(item.user_id)} • {formatDate(item.date)}</span>
+                          </div>
+                          {canUserEditRecipe(item.user_id) && (
+                            <div className="mb-4">
+                              <select
+                                value={item.folderId || ""}
+                                onChange={(e) => {
+                                  e.stopPropagation()
+                                  moveToFolder(item.id, e.target.value || undefined)
+                                }}
+                                className="text-xs rounded-lg bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 cursor-pointer hover:bg-gray-100 w-full p-2"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <option value="">📂 Uncategorized</option>
+                                {getMainCategories().flatMap((folder) => [
+                                  <option key={folder.id} value={folder.id}>
+                                    📁 {folder.name}
+                                  </option>,
+                                  ...getSubcategories(folder.id).map((subcategory) => (
+                                    <option key={subcategory.id} value={subcategory.id}>
+                                      &nbsp;&nbsp;&nbsp;&nbsp;📂 {subcategory.name}
+                                    </option>
+                                  )),
+                                ])}
+                              </select>
                             </div>
                           )}
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
-                          <Calendar className="h-3 w-3" />
-                          <span>Von {getUserName(item.user_id)} • {formatDate(item.date)}</span>
-                        </div>
-
-                        {/* Category dropdown - Only show if user can edit this recipe */}
-                        {canUserEditRecipe(item.user_id) && (
-                          <div className={viewMode === 'list' ? "mb-1" : "mb-4"}>
-                            <select
-                              value={item.folderId || ""}
-                              onChange={(e) => {
-                                e.stopPropagation()
-                                moveToFolder(item.id, e.target.value || undefined)
-                              }}
-                              className={`text-xs rounded-lg bg-gray-50 border border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 cursor-pointer hover:bg-gray-100 ${
-                                viewMode === 'list'
-                                  ? 'w-auto min-w-[120px] max-w-[150px] px-2 py-1 text-xs'
-                                  : 'w-full p-2'
-                              }`}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <option value="">📂 Uncategorized</option>
-                              {getMainCategories().flatMap((folder) => [
-                                <option key={folder.id} value={folder.id}>
-                                  📁 {folder.name}
-                                </option>,
-                                ...getSubcategories(folder.id).map((subcategory) => (
-                                  <option key={subcategory.id} value={subcategory.id}>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;📂 {subcategory.name}
-                                  </option>
-                                )),
-                              ])}
-                            </select>
-                          </div>
-                        )}
-
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    )}
                   </motion.div>
                 ))}
               </AnimatePresence>
